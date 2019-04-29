@@ -1,5 +1,13 @@
 # source: https://us1.prisma.sh/daniel-simandl/streaming-backend/dev
-# timestamp: Sat Apr 27 2019 22:52:00 GMT-0500 (Central Daylight Time)
+# timestamp: Sun Apr 28 2019 17:41:37 GMT-0500 (Central Daylight Time)
+
+type AggregateLiveStreamDetails {
+  count: Int!
+}
+
+type AggregateLiveStreams {
+  count: Int!
+}
 
 type AggregateUser {
   count: Int!
@@ -10,6 +18,993 @@ type BatchPayload {
   count: Long!
 }
 
+scalar DateTime
+
+type LiveStreamDetails implements Node {
+  id: ID!
+  name: String!
+  recording: Boolean
+  player_video_poster_image_url: String
+  player_countdown: String
+  player_logo_image_url: String
+  player_logo_position: String
+  player_embed_code: String
+  player_hls_playback_url: String
+  hosted_page: String
+  hosted_page_title: String
+  hosted_page_url: String
+  hosted_page_description: String
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+"""A connection to a list of items."""
+type LiveStreamDetailsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [LiveStreamDetailsEdge]!
+  aggregate: AggregateLiveStreamDetails!
+}
+
+input LiveStreamDetailsCreateInput {
+  id: ID
+  name: String!
+  recording: Boolean
+  player_video_poster_image_url: String
+  player_countdown: String
+  player_logo_image_url: String
+  player_logo_position: String
+  player_embed_code: String
+  player_hls_playback_url: String
+  hosted_page: String
+  hosted_page_title: String
+  hosted_page_url: String
+  hosted_page_description: String
+}
+
+input LiveStreamDetailsCreateOneInput {
+  create: LiveStreamDetailsCreateInput
+  connect: LiveStreamDetailsWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type LiveStreamDetailsEdge {
+  """The item at the end of the edge."""
+  node: LiveStreamDetails!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum LiveStreamDetailsOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  recording_ASC
+  recording_DESC
+  player_video_poster_image_url_ASC
+  player_video_poster_image_url_DESC
+  player_countdown_ASC
+  player_countdown_DESC
+  player_logo_image_url_ASC
+  player_logo_image_url_DESC
+  player_logo_position_ASC
+  player_logo_position_DESC
+  player_embed_code_ASC
+  player_embed_code_DESC
+  player_hls_playback_url_ASC
+  player_hls_playback_url_DESC
+  hosted_page_ASC
+  hosted_page_DESC
+  hosted_page_title_ASC
+  hosted_page_title_DESC
+  hosted_page_url_ASC
+  hosted_page_url_DESC
+  hosted_page_description_ASC
+  hosted_page_description_DESC
+  created_at_ASC
+  created_at_DESC
+  updated_at_ASC
+  updated_at_DESC
+}
+
+type LiveStreamDetailsPreviousValues {
+  id: ID!
+  name: String!
+  recording: Boolean
+  player_video_poster_image_url: String
+  player_countdown: String
+  player_logo_image_url: String
+  player_logo_position: String
+  player_embed_code: String
+  player_hls_playback_url: String
+  hosted_page: String
+  hosted_page_title: String
+  hosted_page_url: String
+  hosted_page_description: String
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type LiveStreamDetailsSubscriptionPayload {
+  mutation: MutationType!
+  node: LiveStreamDetails
+  updatedFields: [String!]
+  previousValues: LiveStreamDetailsPreviousValues
+}
+
+input LiveStreamDetailsSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [LiveStreamDetailsSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [LiveStreamDetailsSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [LiveStreamDetailsSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: LiveStreamDetailsWhereInput
+}
+
+input LiveStreamDetailsUpdateDataInput {
+  name: String
+  recording: Boolean
+  player_video_poster_image_url: String
+  player_countdown: String
+  player_logo_image_url: String
+  player_logo_position: String
+  player_embed_code: String
+  player_hls_playback_url: String
+  hosted_page: String
+  hosted_page_title: String
+  hosted_page_url: String
+  hosted_page_description: String
+}
+
+input LiveStreamDetailsUpdateInput {
+  name: String
+  recording: Boolean
+  player_video_poster_image_url: String
+  player_countdown: String
+  player_logo_image_url: String
+  player_logo_position: String
+  player_embed_code: String
+  player_hls_playback_url: String
+  hosted_page: String
+  hosted_page_title: String
+  hosted_page_url: String
+  hosted_page_description: String
+}
+
+input LiveStreamDetailsUpdateManyMutationInput {
+  name: String
+  recording: Boolean
+  player_video_poster_image_url: String
+  player_countdown: String
+  player_logo_image_url: String
+  player_logo_position: String
+  player_embed_code: String
+  player_hls_playback_url: String
+  hosted_page: String
+  hosted_page_title: String
+  hosted_page_url: String
+  hosted_page_description: String
+}
+
+input LiveStreamDetailsUpdateOneInput {
+  create: LiveStreamDetailsCreateInput
+  connect: LiveStreamDetailsWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: LiveStreamDetailsUpdateDataInput
+  upsert: LiveStreamDetailsUpsertNestedInput
+}
+
+input LiveStreamDetailsUpsertNestedInput {
+  update: LiveStreamDetailsUpdateDataInput!
+  create: LiveStreamDetailsCreateInput!
+}
+
+input LiveStreamDetailsWhereInput {
+  """Logical AND on all given filters."""
+  AND: [LiveStreamDetailsWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [LiveStreamDetailsWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [LiveStreamDetailsWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  recording: Boolean
+
+  """All values that are not equal to given value."""
+  recording_not: Boolean
+  player_video_poster_image_url: String
+
+  """All values that are not equal to given value."""
+  player_video_poster_image_url_not: String
+
+  """All values that are contained in given list."""
+  player_video_poster_image_url_in: [String!]
+
+  """All values that are not contained in given list."""
+  player_video_poster_image_url_not_in: [String!]
+
+  """All values less than the given value."""
+  player_video_poster_image_url_lt: String
+
+  """All values less than or equal the given value."""
+  player_video_poster_image_url_lte: String
+
+  """All values greater than the given value."""
+  player_video_poster_image_url_gt: String
+
+  """All values greater than or equal the given value."""
+  player_video_poster_image_url_gte: String
+
+  """All values containing the given string."""
+  player_video_poster_image_url_contains: String
+
+  """All values not containing the given string."""
+  player_video_poster_image_url_not_contains: String
+
+  """All values starting with the given string."""
+  player_video_poster_image_url_starts_with: String
+
+  """All values not starting with the given string."""
+  player_video_poster_image_url_not_starts_with: String
+
+  """All values ending with the given string."""
+  player_video_poster_image_url_ends_with: String
+
+  """All values not ending with the given string."""
+  player_video_poster_image_url_not_ends_with: String
+  player_countdown: String
+
+  """All values that are not equal to given value."""
+  player_countdown_not: String
+
+  """All values that are contained in given list."""
+  player_countdown_in: [String!]
+
+  """All values that are not contained in given list."""
+  player_countdown_not_in: [String!]
+
+  """All values less than the given value."""
+  player_countdown_lt: String
+
+  """All values less than or equal the given value."""
+  player_countdown_lte: String
+
+  """All values greater than the given value."""
+  player_countdown_gt: String
+
+  """All values greater than or equal the given value."""
+  player_countdown_gte: String
+
+  """All values containing the given string."""
+  player_countdown_contains: String
+
+  """All values not containing the given string."""
+  player_countdown_not_contains: String
+
+  """All values starting with the given string."""
+  player_countdown_starts_with: String
+
+  """All values not starting with the given string."""
+  player_countdown_not_starts_with: String
+
+  """All values ending with the given string."""
+  player_countdown_ends_with: String
+
+  """All values not ending with the given string."""
+  player_countdown_not_ends_with: String
+  player_logo_image_url: String
+
+  """All values that are not equal to given value."""
+  player_logo_image_url_not: String
+
+  """All values that are contained in given list."""
+  player_logo_image_url_in: [String!]
+
+  """All values that are not contained in given list."""
+  player_logo_image_url_not_in: [String!]
+
+  """All values less than the given value."""
+  player_logo_image_url_lt: String
+
+  """All values less than or equal the given value."""
+  player_logo_image_url_lte: String
+
+  """All values greater than the given value."""
+  player_logo_image_url_gt: String
+
+  """All values greater than or equal the given value."""
+  player_logo_image_url_gte: String
+
+  """All values containing the given string."""
+  player_logo_image_url_contains: String
+
+  """All values not containing the given string."""
+  player_logo_image_url_not_contains: String
+
+  """All values starting with the given string."""
+  player_logo_image_url_starts_with: String
+
+  """All values not starting with the given string."""
+  player_logo_image_url_not_starts_with: String
+
+  """All values ending with the given string."""
+  player_logo_image_url_ends_with: String
+
+  """All values not ending with the given string."""
+  player_logo_image_url_not_ends_with: String
+  player_logo_position: String
+
+  """All values that are not equal to given value."""
+  player_logo_position_not: String
+
+  """All values that are contained in given list."""
+  player_logo_position_in: [String!]
+
+  """All values that are not contained in given list."""
+  player_logo_position_not_in: [String!]
+
+  """All values less than the given value."""
+  player_logo_position_lt: String
+
+  """All values less than or equal the given value."""
+  player_logo_position_lte: String
+
+  """All values greater than the given value."""
+  player_logo_position_gt: String
+
+  """All values greater than or equal the given value."""
+  player_logo_position_gte: String
+
+  """All values containing the given string."""
+  player_logo_position_contains: String
+
+  """All values not containing the given string."""
+  player_logo_position_not_contains: String
+
+  """All values starting with the given string."""
+  player_logo_position_starts_with: String
+
+  """All values not starting with the given string."""
+  player_logo_position_not_starts_with: String
+
+  """All values ending with the given string."""
+  player_logo_position_ends_with: String
+
+  """All values not ending with the given string."""
+  player_logo_position_not_ends_with: String
+  player_embed_code: String
+
+  """All values that are not equal to given value."""
+  player_embed_code_not: String
+
+  """All values that are contained in given list."""
+  player_embed_code_in: [String!]
+
+  """All values that are not contained in given list."""
+  player_embed_code_not_in: [String!]
+
+  """All values less than the given value."""
+  player_embed_code_lt: String
+
+  """All values less than or equal the given value."""
+  player_embed_code_lte: String
+
+  """All values greater than the given value."""
+  player_embed_code_gt: String
+
+  """All values greater than or equal the given value."""
+  player_embed_code_gte: String
+
+  """All values containing the given string."""
+  player_embed_code_contains: String
+
+  """All values not containing the given string."""
+  player_embed_code_not_contains: String
+
+  """All values starting with the given string."""
+  player_embed_code_starts_with: String
+
+  """All values not starting with the given string."""
+  player_embed_code_not_starts_with: String
+
+  """All values ending with the given string."""
+  player_embed_code_ends_with: String
+
+  """All values not ending with the given string."""
+  player_embed_code_not_ends_with: String
+  player_hls_playback_url: String
+
+  """All values that are not equal to given value."""
+  player_hls_playback_url_not: String
+
+  """All values that are contained in given list."""
+  player_hls_playback_url_in: [String!]
+
+  """All values that are not contained in given list."""
+  player_hls_playback_url_not_in: [String!]
+
+  """All values less than the given value."""
+  player_hls_playback_url_lt: String
+
+  """All values less than or equal the given value."""
+  player_hls_playback_url_lte: String
+
+  """All values greater than the given value."""
+  player_hls_playback_url_gt: String
+
+  """All values greater than or equal the given value."""
+  player_hls_playback_url_gte: String
+
+  """All values containing the given string."""
+  player_hls_playback_url_contains: String
+
+  """All values not containing the given string."""
+  player_hls_playback_url_not_contains: String
+
+  """All values starting with the given string."""
+  player_hls_playback_url_starts_with: String
+
+  """All values not starting with the given string."""
+  player_hls_playback_url_not_starts_with: String
+
+  """All values ending with the given string."""
+  player_hls_playback_url_ends_with: String
+
+  """All values not ending with the given string."""
+  player_hls_playback_url_not_ends_with: String
+  hosted_page: String
+
+  """All values that are not equal to given value."""
+  hosted_page_not: String
+
+  """All values that are contained in given list."""
+  hosted_page_in: [String!]
+
+  """All values that are not contained in given list."""
+  hosted_page_not_in: [String!]
+
+  """All values less than the given value."""
+  hosted_page_lt: String
+
+  """All values less than or equal the given value."""
+  hosted_page_lte: String
+
+  """All values greater than the given value."""
+  hosted_page_gt: String
+
+  """All values greater than or equal the given value."""
+  hosted_page_gte: String
+
+  """All values containing the given string."""
+  hosted_page_contains: String
+
+  """All values not containing the given string."""
+  hosted_page_not_contains: String
+
+  """All values starting with the given string."""
+  hosted_page_starts_with: String
+
+  """All values not starting with the given string."""
+  hosted_page_not_starts_with: String
+
+  """All values ending with the given string."""
+  hosted_page_ends_with: String
+
+  """All values not ending with the given string."""
+  hosted_page_not_ends_with: String
+  hosted_page_title: String
+
+  """All values that are not equal to given value."""
+  hosted_page_title_not: String
+
+  """All values that are contained in given list."""
+  hosted_page_title_in: [String!]
+
+  """All values that are not contained in given list."""
+  hosted_page_title_not_in: [String!]
+
+  """All values less than the given value."""
+  hosted_page_title_lt: String
+
+  """All values less than or equal the given value."""
+  hosted_page_title_lte: String
+
+  """All values greater than the given value."""
+  hosted_page_title_gt: String
+
+  """All values greater than or equal the given value."""
+  hosted_page_title_gte: String
+
+  """All values containing the given string."""
+  hosted_page_title_contains: String
+
+  """All values not containing the given string."""
+  hosted_page_title_not_contains: String
+
+  """All values starting with the given string."""
+  hosted_page_title_starts_with: String
+
+  """All values not starting with the given string."""
+  hosted_page_title_not_starts_with: String
+
+  """All values ending with the given string."""
+  hosted_page_title_ends_with: String
+
+  """All values not ending with the given string."""
+  hosted_page_title_not_ends_with: String
+  hosted_page_url: String
+
+  """All values that are not equal to given value."""
+  hosted_page_url_not: String
+
+  """All values that are contained in given list."""
+  hosted_page_url_in: [String!]
+
+  """All values that are not contained in given list."""
+  hosted_page_url_not_in: [String!]
+
+  """All values less than the given value."""
+  hosted_page_url_lt: String
+
+  """All values less than or equal the given value."""
+  hosted_page_url_lte: String
+
+  """All values greater than the given value."""
+  hosted_page_url_gt: String
+
+  """All values greater than or equal the given value."""
+  hosted_page_url_gte: String
+
+  """All values containing the given string."""
+  hosted_page_url_contains: String
+
+  """All values not containing the given string."""
+  hosted_page_url_not_contains: String
+
+  """All values starting with the given string."""
+  hosted_page_url_starts_with: String
+
+  """All values not starting with the given string."""
+  hosted_page_url_not_starts_with: String
+
+  """All values ending with the given string."""
+  hosted_page_url_ends_with: String
+
+  """All values not ending with the given string."""
+  hosted_page_url_not_ends_with: String
+  hosted_page_description: String
+
+  """All values that are not equal to given value."""
+  hosted_page_description_not: String
+
+  """All values that are contained in given list."""
+  hosted_page_description_in: [String!]
+
+  """All values that are not contained in given list."""
+  hosted_page_description_not_in: [String!]
+
+  """All values less than the given value."""
+  hosted_page_description_lt: String
+
+  """All values less than or equal the given value."""
+  hosted_page_description_lte: String
+
+  """All values greater than the given value."""
+  hosted_page_description_gt: String
+
+  """All values greater than or equal the given value."""
+  hosted_page_description_gte: String
+
+  """All values containing the given string."""
+  hosted_page_description_contains: String
+
+  """All values not containing the given string."""
+  hosted_page_description_not_contains: String
+
+  """All values starting with the given string."""
+  hosted_page_description_starts_with: String
+
+  """All values not starting with the given string."""
+  hosted_page_description_not_starts_with: String
+
+  """All values ending with the given string."""
+  hosted_page_description_ends_with: String
+
+  """All values not ending with the given string."""
+  hosted_page_description_not_ends_with: String
+  created_at: DateTime
+
+  """All values that are not equal to given value."""
+  created_at_not: DateTime
+
+  """All values that are contained in given list."""
+  created_at_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  created_at_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  created_at_lt: DateTime
+
+  """All values less than or equal the given value."""
+  created_at_lte: DateTime
+
+  """All values greater than the given value."""
+  created_at_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  created_at_gte: DateTime
+  updated_at: DateTime
+
+  """All values that are not equal to given value."""
+  updated_at_not: DateTime
+
+  """All values that are contained in given list."""
+  updated_at_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updated_at_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updated_at_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updated_at_lte: DateTime
+
+  """All values greater than the given value."""
+  updated_at_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updated_at_gte: DateTime
+}
+
+input LiveStreamDetailsWhereUniqueInput {
+  id: ID
+}
+
+type LiveStreams implements Node {
+  id: ID!
+  name: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  details: LiveStreamDetails
+}
+
+"""A connection to a list of items."""
+type LiveStreamsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [LiveStreamsEdge]!
+  aggregate: AggregateLiveStreams!
+}
+
+input LiveStreamsCreateInput {
+  id: ID
+  name: String!
+  details: LiveStreamDetailsCreateOneInput
+}
+
+"""An edge in a connection."""
+type LiveStreamsEdge {
+  """The item at the end of the edge."""
+  node: LiveStreams!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum LiveStreamsOrderByInput {
+  id_ASC
+  id_DESC
+  name_ASC
+  name_DESC
+  created_at_ASC
+  created_at_DESC
+  updated_at_ASC
+  updated_at_DESC
+}
+
+type LiveStreamsPreviousValues {
+  id: ID!
+  name: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+type LiveStreamsSubscriptionPayload {
+  mutation: MutationType!
+  node: LiveStreams
+  updatedFields: [String!]
+  previousValues: LiveStreamsPreviousValues
+}
+
+input LiveStreamsSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [LiveStreamsSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [LiveStreamsSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [LiveStreamsSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: LiveStreamsWhereInput
+}
+
+input LiveStreamsUpdateInput {
+  name: String
+  details: LiveStreamDetailsUpdateOneInput
+}
+
+input LiveStreamsUpdateManyMutationInput {
+  name: String
+}
+
+input LiveStreamsWhereInput {
+  """Logical AND on all given filters."""
+  AND: [LiveStreamsWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [LiveStreamsWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [LiveStreamsWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  name: String
+
+  """All values that are not equal to given value."""
+  name_not: String
+
+  """All values that are contained in given list."""
+  name_in: [String!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [String!]
+
+  """All values less than the given value."""
+  name_lt: String
+
+  """All values less than or equal the given value."""
+  name_lte: String
+
+  """All values greater than the given value."""
+  name_gt: String
+
+  """All values greater than or equal the given value."""
+  name_gte: String
+
+  """All values containing the given string."""
+  name_contains: String
+
+  """All values not containing the given string."""
+  name_not_contains: String
+
+  """All values starting with the given string."""
+  name_starts_with: String
+
+  """All values not starting with the given string."""
+  name_not_starts_with: String
+
+  """All values ending with the given string."""
+  name_ends_with: String
+
+  """All values not ending with the given string."""
+  name_not_ends_with: String
+  created_at: DateTime
+
+  """All values that are not equal to given value."""
+  created_at_not: DateTime
+
+  """All values that are contained in given list."""
+  created_at_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  created_at_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  created_at_lt: DateTime
+
+  """All values less than or equal the given value."""
+  created_at_lte: DateTime
+
+  """All values greater than the given value."""
+  created_at_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  created_at_gte: DateTime
+  updated_at: DateTime
+
+  """All values that are not equal to given value."""
+  updated_at_not: DateTime
+
+  """All values that are contained in given list."""
+  updated_at_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updated_at_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updated_at_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updated_at_lte: DateTime
+
+  """All values greater than the given value."""
+  updated_at_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updated_at_gte: DateTime
+  details: LiveStreamDetailsWhereInput
+}
+
+input LiveStreamsWhereUniqueInput {
+  id: ID
+}
+
 """
 The `Long` scalar type represents non-fractional signed whole numeric values.
 Long can represent values between -(2^63) and 2^63 - 1.
@@ -18,11 +1013,23 @@ scalar Long
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
+  createLiveStreams(data: LiveStreamsCreateInput!): LiveStreams!
+  createLiveStreamDetails(data: LiveStreamDetailsCreateInput!): LiveStreamDetails!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
+  updateLiveStreams(data: LiveStreamsUpdateInput!, where: LiveStreamsWhereUniqueInput!): LiveStreams
+  updateLiveStreamDetails(data: LiveStreamDetailsUpdateInput!, where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   deleteUser(where: UserWhereUniqueInput!): User
+  deleteLiveStreams(where: LiveStreamsWhereUniqueInput!): LiveStreams
+  deleteLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
+  upsertLiveStreams(where: LiveStreamsWhereUniqueInput!, create: LiveStreamsCreateInput!, update: LiveStreamsUpdateInput!): LiveStreams!
+  upsertLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!, create: LiveStreamDetailsCreateInput!, update: LiveStreamDetailsUpdateInput!): LiveStreamDetails!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
+  updateManyLiveStreamses(data: LiveStreamsUpdateManyMutationInput!, where: LiveStreamsWhereInput): BatchPayload!
+  updateManyLiveStreamDetailses(data: LiveStreamDetailsUpdateManyMutationInput!, where: LiveStreamDetailsWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
+  deleteManyLiveStreamses(where: LiveStreamsWhereInput): BatchPayload!
+  deleteManyLiveStreamDetailses(where: LiveStreamDetailsWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -63,8 +1070,14 @@ enum Permission {
 
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
+  liveStreamses(where: LiveStreamsWhereInput, orderBy: LiveStreamsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreams]!
+  liveStreamDetailses(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreamDetails]!
   user(where: UserWhereUniqueInput!): User
+  liveStreams(where: LiveStreamsWhereUniqueInput!): LiveStreams
+  liveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
+  liveStreamsesConnection(where: LiveStreamsWhereInput, orderBy: LiveStreamsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamsConnection!
+  liveStreamDetailsesConnection(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamDetailsConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -75,6 +1088,8 @@ type Query {
 
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
+  liveStreams(where: LiveStreamsSubscriptionWhereInput): LiveStreamsSubscriptionPayload
+  liveStreamDetails(where: LiveStreamDetailsSubscriptionWhereInput): LiveStreamDetailsSubscriptionPayload
 }
 
 type User implements Node {
