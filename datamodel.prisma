@@ -40,6 +40,7 @@ type LiveStream {
   name: String!
   details: LiveStreamDetails
   thumbnail: ThumbNail
+  state: LiveStreamState
   created_at: DateTime!  @createdAt
   updated_at: DateTime! @updatedAt
 }
@@ -47,4 +48,10 @@ type LiveStream {
 type ThumbNail {
   id: ID! @unique @id
   thumbnail_url: String
+}
+
+type LiveStreamState {
+  id: ID! @unique @id
+  state: String!
+  ip_address: String
 }

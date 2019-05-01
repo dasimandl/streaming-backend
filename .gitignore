@@ -8,3 +8,4 @@ haters/
 layout.md
 .env
 src/generated/prisma.graphql
+secrets.js

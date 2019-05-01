@@ -31,6 +31,21 @@ const LiveStream = {
       return console.error(err.response ? err.response.data.meta : err);
     }
   },
+  state: async (parent, args, ctx, info) => {
+    const { headersObj: headers, path } = buildURLConfig(
+      `${basePath}/${parent.id}/state`
+    );
+    try {
+      const {
+        data: { live_stream: state },
+      } = await axios.get(`${hostname + path}`, headers);
+      state.id = parent.id;
+      return state;
+    } catch (err) {
+      return console.error(err.response ? err.response.data.meta : err);
+    }
+  },
+  
 };
 
 module.exports = LiveStream;

@@ -2,10 +2,14 @@
 
 type Mutation {
   signup(email: String!, name: String!, password: String!): User!
+  liveStreamStart(id: ID!): LiveStreamState!
+  liveStreamStop(id: ID!): LiveStreamState!
 }
 
 type Query {
   users: [User]!
   liveStreams: [LiveStream!]!
-  liveStreamDetails(id: ID!): LiveStreamDetails! 
+  liveStreamDetails(id: ID!): LiveStreamDetails!
+  liveStreamState(id: ID!): LiveStreamState!
+
 }

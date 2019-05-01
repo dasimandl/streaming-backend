@@ -1,11 +1,15 @@
 # source: https://us1.prisma.sh/daniel-simandl/streaming-backend/dev
-# timestamp: Tue Apr 30 2019 20:54:09 GMT-0500 (Central Daylight Time)
+# timestamp: Tue Apr 30 2019 21:05:31 GMT-0500 (Central Daylight Time)
 
 type AggregateLiveStream {
   count: Int!
 }
 
 type AggregateLiveStreamDetails {
+  count: Int!
+}
+
+type AggregateLiveStreamState {
   count: Int!
 }
 
@@ -29,6 +33,7 @@ type LiveStream implements Node {
   name: String!
   details: LiveStreamDetails
   thumbnail: ThumbNail
+  state: LiveStreamState
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -48,6 +53,7 @@ input LiveStreamCreateInput {
   name: String!
   details: LiveStreamDetailsCreateOneInput
   thumbnail: ThumbNailCreateOneInput
+  state: LiveStreamStateCreateOneInput
 }
 
 type LiveStreamDetails implements Node {
@@ -825,6 +831,258 @@ type LiveStreamPreviousValues {
   updated_at: DateTime!
 }
 
+type LiveStreamState implements Node {
+  id: ID!
+  state: String!
+  ip_address: String
+}
+
+"""A connection to a list of items."""
+type LiveStreamStateConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [LiveStreamStateEdge]!
+  aggregate: AggregateLiveStreamState!
+}
+
+input LiveStreamStateCreateInput {
+  id: ID
+  state: String!
+  ip_address: String
+}
+
+input LiveStreamStateCreateOneInput {
+  create: LiveStreamStateCreateInput
+  connect: LiveStreamStateWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type LiveStreamStateEdge {
+  """The item at the end of the edge."""
+  node: LiveStreamState!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum LiveStreamStateOrderByInput {
+  id_ASC
+  id_DESC
+  state_ASC
+  state_DESC
+  ip_address_ASC
+  ip_address_DESC
+}
+
+type LiveStreamStatePreviousValues {
+  id: ID!
+  state: String!
+  ip_address: String
+}
+
+type LiveStreamStateSubscriptionPayload {
+  mutation: MutationType!
+  node: LiveStreamState
+  updatedFields: [String!]
+  previousValues: LiveStreamStatePreviousValues
+}
+
+input LiveStreamStateSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [LiveStreamStateSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [LiveStreamStateSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [LiveStreamStateSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: LiveStreamStateWhereInput
+}
+
+input LiveStreamStateUpdateDataInput {
+  state: String
+  ip_address: String
+}
+
+input LiveStreamStateUpdateInput {
+  state: String
+  ip_address: String
+}
+
+input LiveStreamStateUpdateManyMutationInput {
+  state: String
+  ip_address: String
+}
+
+input LiveStreamStateUpdateOneInput {
+  create: LiveStreamStateCreateInput
+  connect: LiveStreamStateWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: LiveStreamStateUpdateDataInput
+  upsert: LiveStreamStateUpsertNestedInput
+}
+
+input LiveStreamStateUpsertNestedInput {
+  update: LiveStreamStateUpdateDataInput!
+  create: LiveStreamStateCreateInput!
+}
+
+input LiveStreamStateWhereInput {
+  """Logical AND on all given filters."""
+  AND: [LiveStreamStateWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [LiveStreamStateWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [LiveStreamStateWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  state: String
+
+  """All values that are not equal to given value."""
+  state_not: String
+
+  """All values that are contained in given list."""
+  state_in: [String!]
+
+  """All values that are not contained in given list."""
+  state_not_in: [String!]
+
+  """All values less than the given value."""
+  state_lt: String
+
+  """All values less than or equal the given value."""
+  state_lte: String
+
+  """All values greater than the given value."""
+  state_gt: String
+
+  """All values greater than or equal the given value."""
+  state_gte: String
+
+  """All values containing the given string."""
+  state_contains: String
+
+  """All values not containing the given string."""
+  state_not_contains: String
+
+  """All values starting with the given string."""
+  state_starts_with: String
+
+  """All values not starting with the given string."""
+  state_not_starts_with: String
+
+  """All values ending with the given string."""
+  state_ends_with: String
+
+  """All values not ending with the given string."""
+  state_not_ends_with: String
+  ip_address: String
+
+  """All values that are not equal to given value."""
+  ip_address_not: String
+
+  """All values that are contained in given list."""
+  ip_address_in: [String!]
+
+  """All values that are not contained in given list."""
+  ip_address_not_in: [String!]
+
+  """All values less than the given value."""
+  ip_address_lt: String
+
+  """All values less than or equal the given value."""
+  ip_address_lte: String
+
+  """All values greater than the given value."""
+  ip_address_gt: String
+
+  """All values greater than or equal the given value."""
+  ip_address_gte: String
+
+  """All values containing the given string."""
+  ip_address_contains: String
+
+  """All values not containing the given string."""
+  ip_address_not_contains: String
+
+  """All values starting with the given string."""
+  ip_address_starts_with: String
+
+  """All values not starting with the given string."""
+  ip_address_not_starts_with: String
+
+  """All values ending with the given string."""
+  ip_address_ends_with: String
+
+  """All values not ending with the given string."""
+  ip_address_not_ends_with: String
+}
+
+input LiveStreamStateWhereUniqueInput {
+  id: ID
+}
+
 type LiveStreamSubscriptionPayload {
   mutation: MutationType!
   node: LiveStream
@@ -866,6 +1124,7 @@ input LiveStreamUpdateInput {
   name: String
   details: LiveStreamDetailsUpdateOneInput
   thumbnail: ThumbNailUpdateOneInput
+  state: LiveStreamStateUpdateOneInput
 }
 
 input LiveStreamUpdateManyMutationInput {
@@ -1007,6 +1266,7 @@ input LiveStreamWhereInput {
   updated_at_gte: DateTime
   details: LiveStreamDetailsWhereInput
   thumbnail: ThumbNailWhereInput
+  state: LiveStreamStateWhereInput
 }
 
 input LiveStreamWhereUniqueInput {
@@ -1022,26 +1282,32 @@ scalar Long
 type Mutation {
   createUser(data: UserCreateInput!): User!
   createLiveStream(data: LiveStreamCreateInput!): LiveStream!
+  createLiveStreamState(data: LiveStreamStateCreateInput!): LiveStreamState!
   createLiveStreamDetails(data: LiveStreamDetailsCreateInput!): LiveStreamDetails!
   createThumbNail(data: ThumbNailCreateInput!): ThumbNail!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateLiveStream(data: LiveStreamUpdateInput!, where: LiveStreamWhereUniqueInput!): LiveStream
+  updateLiveStreamState(data: LiveStreamStateUpdateInput!, where: LiveStreamStateWhereUniqueInput!): LiveStreamState
   updateLiveStreamDetails(data: LiveStreamDetailsUpdateInput!, where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   updateThumbNail(data: ThumbNailUpdateInput!, where: ThumbNailWhereUniqueInput!): ThumbNail
   deleteUser(where: UserWhereUniqueInput!): User
   deleteLiveStream(where: LiveStreamWhereUniqueInput!): LiveStream
+  deleteLiveStreamState(where: LiveStreamStateWhereUniqueInput!): LiveStreamState
   deleteLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   deleteThumbNail(where: ThumbNailWhereUniqueInput!): ThumbNail
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertLiveStream(where: LiveStreamWhereUniqueInput!, create: LiveStreamCreateInput!, update: LiveStreamUpdateInput!): LiveStream!
+  upsertLiveStreamState(where: LiveStreamStateWhereUniqueInput!, create: LiveStreamStateCreateInput!, update: LiveStreamStateUpdateInput!): LiveStreamState!
   upsertLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!, create: LiveStreamDetailsCreateInput!, update: LiveStreamDetailsUpdateInput!): LiveStreamDetails!
   upsertThumbNail(where: ThumbNailWhereUniqueInput!, create: ThumbNailCreateInput!, update: ThumbNailUpdateInput!): ThumbNail!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyLiveStreams(data: LiveStreamUpdateManyMutationInput!, where: LiveStreamWhereInput): BatchPayload!
+  updateManyLiveStreamStates(data: LiveStreamStateUpdateManyMutationInput!, where: LiveStreamStateWhereInput): BatchPayload!
   updateManyLiveStreamDetailses(data: LiveStreamDetailsUpdateManyMutationInput!, where: LiveStreamDetailsWhereInput): BatchPayload!
   updateManyThumbNails(data: ThumbNailUpdateManyMutationInput!, where: ThumbNailWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyLiveStreams(where: LiveStreamWhereInput): BatchPayload!
+  deleteManyLiveStreamStates(where: LiveStreamStateWhereInput): BatchPayload!
   deleteManyLiveStreamDetailses(where: LiveStreamDetailsWhereInput): BatchPayload!
   deleteManyThumbNails(where: ThumbNailWhereInput): BatchPayload!
 }
@@ -1085,14 +1351,17 @@ enum Permission {
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   liveStreams(where: LiveStreamWhereInput, orderBy: LiveStreamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStream]!
+  liveStreamStates(where: LiveStreamStateWhereInput, orderBy: LiveStreamStateOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreamState]!
   liveStreamDetailses(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreamDetails]!
   thumbNails(where: ThumbNailWhereInput, orderBy: ThumbNailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ThumbNail]!
   user(where: UserWhereUniqueInput!): User
   liveStream(where: LiveStreamWhereUniqueInput!): LiveStream
+  liveStreamState(where: LiveStreamStateWhereUniqueInput!): LiveStreamState
   liveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   thumbNail(where: ThumbNailWhereUniqueInput!): ThumbNail
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   liveStreamsConnection(where: LiveStreamWhereInput, orderBy: LiveStreamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamConnection!
+  liveStreamStatesConnection(where: LiveStreamStateWhereInput, orderBy: LiveStreamStateOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamStateConnection!
   liveStreamDetailsesConnection(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamDetailsConnection!
   thumbNailsConnection(where: ThumbNailWhereInput, orderBy: ThumbNailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ThumbNailConnection!
 
@@ -1106,6 +1375,7 @@ type Query {
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   liveStream(where: LiveStreamSubscriptionWhereInput): LiveStreamSubscriptionPayload
+  liveStreamState(where: LiveStreamStateSubscriptionWhereInput): LiveStreamStateSubscriptionPayload
   liveStreamDetails(where: LiveStreamDetailsSubscriptionWhereInput): LiveStreamDetailsSubscriptionPayload
   thumbNail(where: ThumbNailSubscriptionWhereInput): ThumbNailSubscriptionPayload
 }
