@@ -2,10 +2,10 @@
 node_modules/
 .DS_Store
 *.log
+secrets.js
 haters/
 .next/
 .build/
 layout.md
 .env
 src/generated/prisma.graphql
-secrets.js
