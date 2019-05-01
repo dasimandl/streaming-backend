@@ -1,5 +1,50 @@
+enum Permission {
+  ADMIN
+  USER
+  ITEMCREATE
+  ITEMUPDATE
+  ITEMDELETE
+  PERMISSIONUPDATE
+}
+
 type User {
   id: ID! @unique @id
   name: String!
   email: String! @unique
+  password: String!
+  resetToken: String
+  resetTokenExpiry: Float
+  permissions: [Permission] @scalarList(strategy:RELATION)
+}
+
+type LiveStreamDetails {
+  id: ID! @unique @id
+  name: String!
+  recording: Boolean
+  player_video_poster_image_url: String
+  player_countdown:  String
+  player_logo_image_url: String
+  player_logo_position: String
+  player_embed_code: String
+  player_hls_playback_url: String
+  hosted_page: String
+  hosted_page_title: String
+  hosted_page_url: String
+  hosted_page_description: String
+  created_at: DateTime! @createdAt
+  updated_at: DateTime! @updatedAt
+}
+
+type LiveStream {
+  id: ID! @unique @id
+  name: String!
+  details: LiveStreamDetails
+  thumbnail: ThumbNail
+  created_at: DateTime!  @createdAt
+  updated_at: DateTime! @updatedAt
+}
+
+type ThumbNail {
+  id: ID! @unique @id
+  thumbnail_url: String
 }
