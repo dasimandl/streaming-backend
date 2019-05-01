@@ -38,10 +38,10 @@ type LiveStreamDetails {
 type LiveStream {
   id: ID! @unique @id
   name: String!
-  created_at: DateTime!  @createdAt
-  updated_at: DateTime! @updatedAt
   details: LiveStreamDetails
   thumbnail: ThumbNail
+  created_at: DateTime!  @createdAt
+  updated_at: DateTime! @updatedAt
 }
 
 type ThumbNail {

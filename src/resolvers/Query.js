@@ -22,7 +22,6 @@ const Query = {
     const { headersObj: headers, path } = buildURLConfig(
       `${basePath}/${args.id}`
     );
-    console.log('QUERY');
     try {
       const {
         data: { live_stream },
