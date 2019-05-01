@@ -6,6 +6,6 @@ type Mutation {
 
 type Query {
   users: [User]!
-  liveStreams: [LiveStreams!]!
-  liveStream(id: ID!): LiveStreamDetails! 
+  liveStreams: [LiveStream!]!
+  liveStreamDetails(id: ID!): LiveStreamDetails! 
 }

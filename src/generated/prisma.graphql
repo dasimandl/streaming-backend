@@ -1,11 +1,15 @@
 # source: https://us1.prisma.sh/daniel-simandl/streaming-backend/dev
-# timestamp: Sun Apr 28 2019 17:41:37 GMT-0500 (Central Daylight Time)
+# timestamp: Tue Apr 30 2019 20:19:47 GMT-0500 (Central Daylight Time)
+
+type AggregateLiveStream {
+  count: Int!
+}
 
 type AggregateLiveStreamDetails {
   count: Int!
 }
 
-type AggregateLiveStreams {
+type AggregateThumbNail {
   count: Int!
 }
 
@@ -19,6 +23,32 @@ type BatchPayload {
 }
 
 scalar DateTime
+
+type LiveStream implements Node {
+  id: ID!
+  name: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+  details: LiveStreamDetails
+  thumbnail: ThumbNail
+}
+
+"""A connection to a list of items."""
+type LiveStreamConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [LiveStreamEdge]!
+  aggregate: AggregateLiveStream!
+}
+
+input LiveStreamCreateInput {
+  id: ID
+  name: String!
+  details: LiveStreamDetailsCreateOneInput
+  thumbnail: ThumbNailCreateOneInput
+}
 
 type LiveStreamDetails implements Node {
   id: ID!
@@ -768,40 +798,16 @@ input LiveStreamDetailsWhereUniqueInput {
   id: ID
 }
 
-type LiveStreams implements Node {
-  id: ID!
-  name: String!
-  created_at: DateTime!
-  updated_at: DateTime!
-  details: LiveStreamDetails
-}
-
-"""A connection to a list of items."""
-type LiveStreamsConnection {
-  """Information to aid in pagination."""
-  pageInfo: PageInfo!
-
-  """A list of edges."""
-  edges: [LiveStreamsEdge]!
-  aggregate: AggregateLiveStreams!
-}
-
-input LiveStreamsCreateInput {
-  id: ID
-  name: String!
-  details: LiveStreamDetailsCreateOneInput
-}
-
 """An edge in a connection."""
-type LiveStreamsEdge {
+type LiveStreamEdge {
   """The item at the end of the edge."""
-  node: LiveStreams!
+  node: LiveStream!
 
   """A cursor for use in pagination."""
   cursor: String!
 }
 
-enum LiveStreamsOrderByInput {
+enum LiveStreamOrderByInput {
   id_ASC
   id_DESC
   name_ASC
@@ -812,29 +818,29 @@ enum LiveStreamsOrderByInput {
   updated_at_DESC
 }
 
-type LiveStreamsPreviousValues {
+type LiveStreamPreviousValues {
   id: ID!
   name: String!
   created_at: DateTime!
   updated_at: DateTime!
 }
 
-type LiveStreamsSubscriptionPayload {
+type LiveStreamSubscriptionPayload {
   mutation: MutationType!
-  node: LiveStreams
+  node: LiveStream
   updatedFields: [String!]
-  previousValues: LiveStreamsPreviousValues
+  previousValues: LiveStreamPreviousValues
 }
 
-input LiveStreamsSubscriptionWhereInput {
+input LiveStreamSubscriptionWhereInput {
   """Logical AND on all given filters."""
-  AND: [LiveStreamsSubscriptionWhereInput!]
+  AND: [LiveStreamSubscriptionWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [LiveStreamsSubscriptionWhereInput!]
+  OR: [LiveStreamSubscriptionWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [LiveStreamsSubscriptionWhereInput!]
+  NOT: [LiveStreamSubscriptionWhereInput!]
 
   """The subscription event gets dispatched when it's listed in mutation_in"""
   mutation_in: [MutationType!]
@@ -853,27 +859,28 @@ input LiveStreamsSubscriptionWhereInput {
   The subscription event gets only dispatched when some of the field names included in this list have been updated
   """
   updatedFields_contains_some: [String!]
-  node: LiveStreamsWhereInput
+  node: LiveStreamWhereInput
 }
 
-input LiveStreamsUpdateInput {
+input LiveStreamUpdateInput {
   name: String
   details: LiveStreamDetailsUpdateOneInput
+  thumbnail: ThumbNailUpdateOneInput
 }
 
-input LiveStreamsUpdateManyMutationInput {
+input LiveStreamUpdateManyMutationInput {
   name: String
 }
 
-input LiveStreamsWhereInput {
+input LiveStreamWhereInput {
   """Logical AND on all given filters."""
-  AND: [LiveStreamsWhereInput!]
+  AND: [LiveStreamWhereInput!]
 
   """Logical OR on all given filters."""
-  OR: [LiveStreamsWhereInput!]
+  OR: [LiveStreamWhereInput!]
 
   """Logical NOT on all given filters combined by AND."""
-  NOT: [LiveStreamsWhereInput!]
+  NOT: [LiveStreamWhereInput!]
   id: ID
 
   """All values that are not equal to given value."""
@@ -999,9 +1006,10 @@ input LiveStreamsWhereInput {
   """All values greater than or equal the given value."""
   updated_at_gte: DateTime
   details: LiveStreamDetailsWhereInput
+  thumbnail: ThumbNailWhereInput
 }
 
-input LiveStreamsWhereUniqueInput {
+input LiveStreamWhereUniqueInput {
   id: ID
 }
 
@@ -1013,23 +1021,29 @@ scalar Long
 
 type Mutation {
   createUser(data: UserCreateInput!): User!
-  createLiveStreams(data: LiveStreamsCreateInput!): LiveStreams!
+  createLiveStream(data: LiveStreamCreateInput!): LiveStream!
   createLiveStreamDetails(data: LiveStreamDetailsCreateInput!): LiveStreamDetails!
+  createThumbNail(data: ThumbNailCreateInput!): ThumbNail!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
-  updateLiveStreams(data: LiveStreamsUpdateInput!, where: LiveStreamsWhereUniqueInput!): LiveStreams
+  updateLiveStream(data: LiveStreamUpdateInput!, where: LiveStreamWhereUniqueInput!): LiveStream
   updateLiveStreamDetails(data: LiveStreamDetailsUpdateInput!, where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
+  updateThumbNail(data: ThumbNailUpdateInput!, where: ThumbNailWhereUniqueInput!): ThumbNail
   deleteUser(where: UserWhereUniqueInput!): User
-  deleteLiveStreams(where: LiveStreamsWhereUniqueInput!): LiveStreams
+  deleteLiveStream(where: LiveStreamWhereUniqueInput!): LiveStream
   deleteLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
+  deleteThumbNail(where: ThumbNailWhereUniqueInput!): ThumbNail
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
-  upsertLiveStreams(where: LiveStreamsWhereUniqueInput!, create: LiveStreamsCreateInput!, update: LiveStreamsUpdateInput!): LiveStreams!
+  upsertLiveStream(where: LiveStreamWhereUniqueInput!, create: LiveStreamCreateInput!, update: LiveStreamUpdateInput!): LiveStream!
   upsertLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!, create: LiveStreamDetailsCreateInput!, update: LiveStreamDetailsUpdateInput!): LiveStreamDetails!
+  upsertThumbNail(where: ThumbNailWhereUniqueInput!, create: ThumbNailCreateInput!, update: ThumbNailUpdateInput!): ThumbNail!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
-  updateManyLiveStreamses(data: LiveStreamsUpdateManyMutationInput!, where: LiveStreamsWhereInput): BatchPayload!
+  updateManyLiveStreams(data: LiveStreamUpdateManyMutationInput!, where: LiveStreamWhereInput): BatchPayload!
   updateManyLiveStreamDetailses(data: LiveStreamDetailsUpdateManyMutationInput!, where: LiveStreamDetailsWhereInput): BatchPayload!
+  updateManyThumbNails(data: ThumbNailUpdateManyMutationInput!, where: ThumbNailWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
-  deleteManyLiveStreamses(where: LiveStreamsWhereInput): BatchPayload!
+  deleteManyLiveStreams(where: LiveStreamWhereInput): BatchPayload!
   deleteManyLiveStreamDetailses(where: LiveStreamDetailsWhereInput): BatchPayload!
+  deleteManyThumbNails(where: ThumbNailWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1070,14 +1084,17 @@ enum Permission {
 
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
-  liveStreamses(where: LiveStreamsWhereInput, orderBy: LiveStreamsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreams]!
+  liveStreams(where: LiveStreamWhereInput, orderBy: LiveStreamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStream]!
   liveStreamDetailses(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreamDetails]!
+  thumbNails(where: ThumbNailWhereInput, orderBy: ThumbNailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ThumbNail]!
   user(where: UserWhereUniqueInput!): User
-  liveStreams(where: LiveStreamsWhereUniqueInput!): LiveStreams
+  liveStream(where: LiveStreamWhereUniqueInput!): LiveStream
   liveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
+  thumbNail(where: ThumbNailWhereUniqueInput!): ThumbNail
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
-  liveStreamsesConnection(where: LiveStreamsWhereInput, orderBy: LiveStreamsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamsConnection!
+  liveStreamsConnection(where: LiveStreamWhereInput, orderBy: LiveStreamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamConnection!
   liveStreamDetailsesConnection(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamDetailsConnection!
+  thumbNailsConnection(where: ThumbNailWhereInput, orderBy: ThumbNailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ThumbNailConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -1088,8 +1105,213 @@ type Query {
 
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
-  liveStreams(where: LiveStreamsSubscriptionWhereInput): LiveStreamsSubscriptionPayload
+  liveStream(where: LiveStreamSubscriptionWhereInput): LiveStreamSubscriptionPayload
   liveStreamDetails(where: LiveStreamDetailsSubscriptionWhereInput): LiveStreamDetailsSubscriptionPayload
+  thumbNail(where: ThumbNailSubscriptionWhereInput): ThumbNailSubscriptionPayload
+}
+
+type ThumbNail implements Node {
+  id: ID!
+  thumbnail_url: String
+}
+
+"""A connection to a list of items."""
+type ThumbNailConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [ThumbNailEdge]!
+  aggregate: AggregateThumbNail!
+}
+
+input ThumbNailCreateInput {
+  id: ID
+  thumbnail_url: String
+}
+
+input ThumbNailCreateOneInput {
+  create: ThumbNailCreateInput
+  connect: ThumbNailWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type ThumbNailEdge {
+  """The item at the end of the edge."""
+  node: ThumbNail!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum ThumbNailOrderByInput {
+  id_ASC
+  id_DESC
+  thumbnail_url_ASC
+  thumbnail_url_DESC
+}
+
+type ThumbNailPreviousValues {
+  id: ID!
+  thumbnail_url: String
+}
+
+type ThumbNailSubscriptionPayload {
+  mutation: MutationType!
+  node: ThumbNail
+  updatedFields: [String!]
+  previousValues: ThumbNailPreviousValues
+}
+
+input ThumbNailSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ThumbNailSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ThumbNailSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ThumbNailSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: ThumbNailWhereInput
+}
+
+input ThumbNailUpdateDataInput {
+  thumbnail_url: String
+}
+
+input ThumbNailUpdateInput {
+  thumbnail_url: String
+}
+
+input ThumbNailUpdateManyMutationInput {
+  thumbnail_url: String
+}
+
+input ThumbNailUpdateOneInput {
+  create: ThumbNailCreateInput
+  connect: ThumbNailWhereUniqueInput
+  disconnect: Boolean
+  delete: Boolean
+  update: ThumbNailUpdateDataInput
+  upsert: ThumbNailUpsertNestedInput
+}
+
+input ThumbNailUpsertNestedInput {
+  update: ThumbNailUpdateDataInput!
+  create: ThumbNailCreateInput!
+}
+
+input ThumbNailWhereInput {
+  """Logical AND on all given filters."""
+  AND: [ThumbNailWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [ThumbNailWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [ThumbNailWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  thumbnail_url: String
+
+  """All values that are not equal to given value."""
+  thumbnail_url_not: String
+
+  """All values that are contained in given list."""
+  thumbnail_url_in: [String!]
+
+  """All values that are not contained in given list."""
+  thumbnail_url_not_in: [String!]
+
+  """All values less than the given value."""
+  thumbnail_url_lt: String
+
+  """All values less than or equal the given value."""
+  thumbnail_url_lte: String
+
+  """All values greater than the given value."""
+  thumbnail_url_gt: String
+
+  """All values greater than or equal the given value."""
+  thumbnail_url_gte: String
+
+  """All values containing the given string."""
+  thumbnail_url_contains: String
+
+  """All values not containing the given string."""
+  thumbnail_url_not_contains: String
+
+  """All values starting with the given string."""
+  thumbnail_url_starts_with: String
+
+  """All values not starting with the given string."""
+  thumbnail_url_not_starts_with: String
+
+  """All values ending with the given string."""
+  thumbnail_url_ends_with: String
+
+  """All values not ending with the given string."""
+  thumbnail_url_not_ends_with: String
+}
+
+input ThumbNailWhereUniqueInput {
+  id: ID
 }
 
 type User implements Node {
