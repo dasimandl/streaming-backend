@@ -1,5 +1,5 @@
 # source: https://us1.prisma.sh/daniel-simandl/streaming-backend/dev
-# timestamp: Tue Apr 30 2019 21:05:31 GMT-0500 (Central Daylight Time)
+# timestamp: Sat Oct 26 2019 17:12:00 GMT-0500 (Central Daylight Time)
 
 type AggregateLiveStream {
   count: Int!
@@ -10,6 +10,10 @@ type AggregateLiveStreamDetails {
 }
 
 type AggregateLiveStreamState {
+  count: Int!
+}
+
+type AggregateRecording {
   count: Int!
 }
 
@@ -36,6 +40,7 @@ type LiveStream implements Node {
   state: LiveStreamState
   created_at: DateTime!
   updated_at: DateTime!
+  recordings(where: RecordingWhereInput, orderBy: RecordingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recording!]
 }
 
 """A connection to a list of items."""
@@ -54,6 +59,7 @@ input LiveStreamCreateInput {
   details: LiveStreamDetailsCreateOneInput
   thumbnail: ThumbNailCreateOneInput
   state: LiveStreamStateCreateOneInput
+  recordings: RecordingCreateManyInput
 }
 
 type LiveStreamDetails implements Node {
@@ -1125,6 +1131,7 @@ input LiveStreamUpdateInput {
   details: LiveStreamDetailsUpdateOneInput
   thumbnail: ThumbNailUpdateOneInput
   state: LiveStreamStateUpdateOneInput
+  recordings: RecordingUpdateManyInput
 }
 
 input LiveStreamUpdateManyMutationInput {
@@ -1267,6 +1274,9 @@ input LiveStreamWhereInput {
   details: LiveStreamDetailsWhereInput
   thumbnail: ThumbNailWhereInput
   state: LiveStreamStateWhereInput
+  recordings_every: RecordingWhereInput
+  recordings_some: RecordingWhereInput
+  recordings_none: RecordingWhereInput
 }
 
 input LiveStreamWhereUniqueInput {
@@ -1283,31 +1293,37 @@ type Mutation {
   createUser(data: UserCreateInput!): User!
   createLiveStream(data: LiveStreamCreateInput!): LiveStream!
   createLiveStreamState(data: LiveStreamStateCreateInput!): LiveStreamState!
+  createRecording(data: RecordingCreateInput!): Recording!
   createLiveStreamDetails(data: LiveStreamDetailsCreateInput!): LiveStreamDetails!
   createThumbNail(data: ThumbNailCreateInput!): ThumbNail!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateLiveStream(data: LiveStreamUpdateInput!, where: LiveStreamWhereUniqueInput!): LiveStream
   updateLiveStreamState(data: LiveStreamStateUpdateInput!, where: LiveStreamStateWhereUniqueInput!): LiveStreamState
+  updateRecording(data: RecordingUpdateInput!, where: RecordingWhereUniqueInput!): Recording
   updateLiveStreamDetails(data: LiveStreamDetailsUpdateInput!, where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   updateThumbNail(data: ThumbNailUpdateInput!, where: ThumbNailWhereUniqueInput!): ThumbNail
   deleteUser(where: UserWhereUniqueInput!): User
   deleteLiveStream(where: LiveStreamWhereUniqueInput!): LiveStream
   deleteLiveStreamState(where: LiveStreamStateWhereUniqueInput!): LiveStreamState
+  deleteRecording(where: RecordingWhereUniqueInput!): Recording
   deleteLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   deleteThumbNail(where: ThumbNailWhereUniqueInput!): ThumbNail
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertLiveStream(where: LiveStreamWhereUniqueInput!, create: LiveStreamCreateInput!, update: LiveStreamUpdateInput!): LiveStream!
   upsertLiveStreamState(where: LiveStreamStateWhereUniqueInput!, create: LiveStreamStateCreateInput!, update: LiveStreamStateUpdateInput!): LiveStreamState!
+  upsertRecording(where: RecordingWhereUniqueInput!, create: RecordingCreateInput!, update: RecordingUpdateInput!): Recording!
   upsertLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!, create: LiveStreamDetailsCreateInput!, update: LiveStreamDetailsUpdateInput!): LiveStreamDetails!
   upsertThumbNail(where: ThumbNailWhereUniqueInput!, create: ThumbNailCreateInput!, update: ThumbNailUpdateInput!): ThumbNail!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyLiveStreams(data: LiveStreamUpdateManyMutationInput!, where: LiveStreamWhereInput): BatchPayload!
   updateManyLiveStreamStates(data: LiveStreamStateUpdateManyMutationInput!, where: LiveStreamStateWhereInput): BatchPayload!
+  updateManyRecordings(data: RecordingUpdateManyMutationInput!, where: RecordingWhereInput): BatchPayload!
   updateManyLiveStreamDetailses(data: LiveStreamDetailsUpdateManyMutationInput!, where: LiveStreamDetailsWhereInput): BatchPayload!
   updateManyThumbNails(data: ThumbNailUpdateManyMutationInput!, where: ThumbNailWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyLiveStreams(where: LiveStreamWhereInput): BatchPayload!
   deleteManyLiveStreamStates(where: LiveStreamStateWhereInput): BatchPayload!
+  deleteManyRecordings(where: RecordingWhereInput): BatchPayload!
   deleteManyLiveStreamDetailses(where: LiveStreamDetailsWhereInput): BatchPayload!
   deleteManyThumbNails(where: ThumbNailWhereInput): BatchPayload!
 }
@@ -1352,16 +1368,19 @@ type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   liveStreams(where: LiveStreamWhereInput, orderBy: LiveStreamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStream]!
   liveStreamStates(where: LiveStreamStateWhereInput, orderBy: LiveStreamStateOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreamState]!
+  recordings(where: RecordingWhereInput, orderBy: RecordingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recording]!
   liveStreamDetailses(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreamDetails]!
   thumbNails(where: ThumbNailWhereInput, orderBy: ThumbNailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ThumbNail]!
   user(where: UserWhereUniqueInput!): User
   liveStream(where: LiveStreamWhereUniqueInput!): LiveStream
   liveStreamState(where: LiveStreamStateWhereUniqueInput!): LiveStreamState
+  recording(where: RecordingWhereUniqueInput!): Recording
   liveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   thumbNail(where: ThumbNailWhereUniqueInput!): ThumbNail
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   liveStreamsConnection(where: LiveStreamWhereInput, orderBy: LiveStreamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamConnection!
   liveStreamStatesConnection(where: LiveStreamStateWhereInput, orderBy: LiveStreamStateOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamStateConnection!
+  recordingsConnection(where: RecordingWhereInput, orderBy: RecordingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RecordingConnection!
   liveStreamDetailsesConnection(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamDetailsConnection!
   thumbNailsConnection(where: ThumbNailWhereInput, orderBy: ThumbNailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ThumbNailConnection!
 
@@ -1372,10 +1391,1159 @@ type Query {
   ): Node
 }
 
+type Recording implements Node {
+  id: ID!
+  state: String!
+  transcoder_id: String!
+  transcoder_name: String!
+  starts_at: String!
+  transcoding_uptime_id: String!
+  file_name: String!
+  file_size: Int!
+  duration: Int!
+  download_url: String!
+  reason: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+"""A connection to a list of items."""
+type RecordingConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [RecordingEdge]!
+  aggregate: AggregateRecording!
+}
+
+input RecordingCreateInput {
+  id: ID
+  state: String!
+  transcoder_id: String!
+  transcoder_name: String!
+  starts_at: String!
+  transcoding_uptime_id: String!
+  file_name: String!
+  file_size: Int!
+  duration: Int!
+  download_url: String!
+  reason: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+input RecordingCreateManyInput {
+  create: [RecordingCreateInput!]
+  connect: [RecordingWhereUniqueInput!]
+}
+
+"""An edge in a connection."""
+type RecordingEdge {
+  """The item at the end of the edge."""
+  node: Recording!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum RecordingOrderByInput {
+  id_ASC
+  id_DESC
+  state_ASC
+  state_DESC
+  transcoder_id_ASC
+  transcoder_id_DESC
+  transcoder_name_ASC
+  transcoder_name_DESC
+  starts_at_ASC
+  starts_at_DESC
+  transcoding_uptime_id_ASC
+  transcoding_uptime_id_DESC
+  file_name_ASC
+  file_name_DESC
+  file_size_ASC
+  file_size_DESC
+  duration_ASC
+  duration_DESC
+  download_url_ASC
+  download_url_DESC
+  reason_ASC
+  reason_DESC
+  created_at_ASC
+  created_at_DESC
+  updated_at_ASC
+  updated_at_DESC
+}
+
+type RecordingPreviousValues {
+  id: ID!
+  state: String!
+  transcoder_id: String!
+  transcoder_name: String!
+  starts_at: String!
+  transcoding_uptime_id: String!
+  file_name: String!
+  file_size: Int!
+  duration: Int!
+  download_url: String!
+  reason: String!
+  created_at: DateTime!
+  updated_at: DateTime!
+}
+
+input RecordingScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RecordingScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RecordingScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RecordingScalarWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  state: String
+
+  """All values that are not equal to given value."""
+  state_not: String
+
+  """All values that are contained in given list."""
+  state_in: [String!]
+
+  """All values that are not contained in given list."""
+  state_not_in: [String!]
+
+  """All values less than the given value."""
+  state_lt: String
+
+  """All values less than or equal the given value."""
+  state_lte: String
+
+  """All values greater than the given value."""
+  state_gt: String
+
+  """All values greater than or equal the given value."""
+  state_gte: String
+
+  """All values containing the given string."""
+  state_contains: String
+
+  """All values not containing the given string."""
+  state_not_contains: String
+
+  """All values starting with the given string."""
+  state_starts_with: String
+
+  """All values not starting with the given string."""
+  state_not_starts_with: String
+
+  """All values ending with the given string."""
+  state_ends_with: String
+
+  """All values not ending with the given string."""
+  state_not_ends_with: String
+  transcoder_id: String
+
+  """All values that are not equal to given value."""
+  transcoder_id_not: String
+
+  """All values that are contained in given list."""
+  transcoder_id_in: [String!]
+
+  """All values that are not contained in given list."""
+  transcoder_id_not_in: [String!]
+
+  """All values less than the given value."""
+  transcoder_id_lt: String
+
+  """All values less than or equal the given value."""
+  transcoder_id_lte: String
+
+  """All values greater than the given value."""
+  transcoder_id_gt: String
+
+  """All values greater than or equal the given value."""
+  transcoder_id_gte: String
+
+  """All values containing the given string."""
+  transcoder_id_contains: String
+
+  """All values not containing the given string."""
+  transcoder_id_not_contains: String
+
+  """All values starting with the given string."""
+  transcoder_id_starts_with: String
+
+  """All values not starting with the given string."""
+  transcoder_id_not_starts_with: String
+
+  """All values ending with the given string."""
+  transcoder_id_ends_with: String
+
+  """All values not ending with the given string."""
+  transcoder_id_not_ends_with: String
+  transcoder_name: String
+
+  """All values that are not equal to given value."""
+  transcoder_name_not: String
+
+  """All values that are contained in given list."""
+  transcoder_name_in: [String!]
+
+  """All values that are not contained in given list."""
+  transcoder_name_not_in: [String!]
+
+  """All values less than the given value."""
+  transcoder_name_lt: String
+
+  """All values less than or equal the given value."""
+  transcoder_name_lte: String
+
+  """All values greater than the given value."""
+  transcoder_name_gt: String
+
+  """All values greater than or equal the given value."""
+  transcoder_name_gte: String
+
+  """All values containing the given string."""
+  transcoder_name_contains: String
+
+  """All values not containing the given string."""
+  transcoder_name_not_contains: String
+
+  """All values starting with the given string."""
+  transcoder_name_starts_with: String
+
+  """All values not starting with the given string."""
+  transcoder_name_not_starts_with: String
+
+  """All values ending with the given string."""
+  transcoder_name_ends_with: String
+
+  """All values not ending with the given string."""
+  transcoder_name_not_ends_with: String
+  starts_at: String
+
+  """All values that are not equal to given value."""
+  starts_at_not: String
+
+  """All values that are contained in given list."""
+  starts_at_in: [String!]
+
+  """All values that are not contained in given list."""
+  starts_at_not_in: [String!]
+
+  """All values less than the given value."""
+  starts_at_lt: String
+
+  """All values less than or equal the given value."""
+  starts_at_lte: String
+
+  """All values greater than the given value."""
+  starts_at_gt: String
+
+  """All values greater than or equal the given value."""
+  starts_at_gte: String
+
+  """All values containing the given string."""
+  starts_at_contains: String
+
+  """All values not containing the given string."""
+  starts_at_not_contains: String
+
+  """All values starting with the given string."""
+  starts_at_starts_with: String
+
+  """All values not starting with the given string."""
+  starts_at_not_starts_with: String
+
+  """All values ending with the given string."""
+  starts_at_ends_with: String
+
+  """All values not ending with the given string."""
+  starts_at_not_ends_with: String
+  transcoding_uptime_id: String
+
+  """All values that are not equal to given value."""
+  transcoding_uptime_id_not: String
+
+  """All values that are contained in given list."""
+  transcoding_uptime_id_in: [String!]
+
+  """All values that are not contained in given list."""
+  transcoding_uptime_id_not_in: [String!]
+
+  """All values less than the given value."""
+  transcoding_uptime_id_lt: String
+
+  """All values less than or equal the given value."""
+  transcoding_uptime_id_lte: String
+
+  """All values greater than the given value."""
+  transcoding_uptime_id_gt: String
+
+  """All values greater than or equal the given value."""
+  transcoding_uptime_id_gte: String
+
+  """All values containing the given string."""
+  transcoding_uptime_id_contains: String
+
+  """All values not containing the given string."""
+  transcoding_uptime_id_not_contains: String
+
+  """All values starting with the given string."""
+  transcoding_uptime_id_starts_with: String
+
+  """All values not starting with the given string."""
+  transcoding_uptime_id_not_starts_with: String
+
+  """All values ending with the given string."""
+  transcoding_uptime_id_ends_with: String
+
+  """All values not ending with the given string."""
+  transcoding_uptime_id_not_ends_with: String
+  file_name: String
+
+  """All values that are not equal to given value."""
+  file_name_not: String
+
+  """All values that are contained in given list."""
+  file_name_in: [String!]
+
+  """All values that are not contained in given list."""
+  file_name_not_in: [String!]
+
+  """All values less than the given value."""
+  file_name_lt: String
+
+  """All values less than or equal the given value."""
+  file_name_lte: String
+
+  """All values greater than the given value."""
+  file_name_gt: String
+
+  """All values greater than or equal the given value."""
+  file_name_gte: String
+
+  """All values containing the given string."""
+  file_name_contains: String
+
+  """All values not containing the given string."""
+  file_name_not_contains: String
+
+  """All values starting with the given string."""
+  file_name_starts_with: String
+
+  """All values not starting with the given string."""
+  file_name_not_starts_with: String
+
+  """All values ending with the given string."""
+  file_name_ends_with: String
+
+  """All values not ending with the given string."""
+  file_name_not_ends_with: String
+  file_size: Int
+
+  """All values that are not equal to given value."""
+  file_size_not: Int
+
+  """All values that are contained in given list."""
+  file_size_in: [Int!]
+
+  """All values that are not contained in given list."""
+  file_size_not_in: [Int!]
+
+  """All values less than the given value."""
+  file_size_lt: Int
+
+  """All values less than or equal the given value."""
+  file_size_lte: Int
+
+  """All values greater than the given value."""
+  file_size_gt: Int
+
+  """All values greater than or equal the given value."""
+  file_size_gte: Int
+  duration: Int
+
+  """All values that are not equal to given value."""
+  duration_not: Int
+
+  """All values that are contained in given list."""
+  duration_in: [Int!]
+
+  """All values that are not contained in given list."""
+  duration_not_in: [Int!]
+
+  """All values less than the given value."""
+  duration_lt: Int
+
+  """All values less than or equal the given value."""
+  duration_lte: Int
+
+  """All values greater than the given value."""
+  duration_gt: Int
+
+  """All values greater than or equal the given value."""
+  duration_gte: Int
+  download_url: String
+
+  """All values that are not equal to given value."""
+  download_url_not: String
+
+  """All values that are contained in given list."""
+  download_url_in: [String!]
+
+  """All values that are not contained in given list."""
+  download_url_not_in: [String!]
+
+  """All values less than the given value."""
+  download_url_lt: String
+
+  """All values less than or equal the given value."""
+  download_url_lte: String
+
+  """All values greater than the given value."""
+  download_url_gt: String
+
+  """All values greater than or equal the given value."""
+  download_url_gte: String
+
+  """All values containing the given string."""
+  download_url_contains: String
+
+  """All values not containing the given string."""
+  download_url_not_contains: String
+
+  """All values starting with the given string."""
+  download_url_starts_with: String
+
+  """All values not starting with the given string."""
+  download_url_not_starts_with: String
+
+  """All values ending with the given string."""
+  download_url_ends_with: String
+
+  """All values not ending with the given string."""
+  download_url_not_ends_with: String
+  reason: String
+
+  """All values that are not equal to given value."""
+  reason_not: String
+
+  """All values that are contained in given list."""
+  reason_in: [String!]
+
+  """All values that are not contained in given list."""
+  reason_not_in: [String!]
+
+  """All values less than the given value."""
+  reason_lt: String
+
+  """All values less than or equal the given value."""
+  reason_lte: String
+
+  """All values greater than the given value."""
+  reason_gt: String
+
+  """All values greater than or equal the given value."""
+  reason_gte: String
+
+  """All values containing the given string."""
+  reason_contains: String
+
+  """All values not containing the given string."""
+  reason_not_contains: String
+
+  """All values starting with the given string."""
+  reason_starts_with: String
+
+  """All values not starting with the given string."""
+  reason_not_starts_with: String
+
+  """All values ending with the given string."""
+  reason_ends_with: String
+
+  """All values not ending with the given string."""
+  reason_not_ends_with: String
+  created_at: DateTime
+
+  """All values that are not equal to given value."""
+  created_at_not: DateTime
+
+  """All values that are contained in given list."""
+  created_at_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  created_at_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  created_at_lt: DateTime
+
+  """All values less than or equal the given value."""
+  created_at_lte: DateTime
+
+  """All values greater than the given value."""
+  created_at_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  created_at_gte: DateTime
+  updated_at: DateTime
+
+  """All values that are not equal to given value."""
+  updated_at_not: DateTime
+
+  """All values that are contained in given list."""
+  updated_at_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updated_at_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updated_at_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updated_at_lte: DateTime
+
+  """All values greater than the given value."""
+  updated_at_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updated_at_gte: DateTime
+}
+
+type RecordingSubscriptionPayload {
+  mutation: MutationType!
+  node: Recording
+  updatedFields: [String!]
+  previousValues: RecordingPreviousValues
+}
+
+input RecordingSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RecordingSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RecordingSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RecordingSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: RecordingWhereInput
+}
+
+input RecordingUpdateDataInput {
+  state: String
+  transcoder_id: String
+  transcoder_name: String
+  starts_at: String
+  transcoding_uptime_id: String
+  file_name: String
+  file_size: Int
+  duration: Int
+  download_url: String
+  reason: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+input RecordingUpdateInput {
+  state: String
+  transcoder_id: String
+  transcoder_name: String
+  starts_at: String
+  transcoding_uptime_id: String
+  file_name: String
+  file_size: Int
+  duration: Int
+  download_url: String
+  reason: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+input RecordingUpdateManyDataInput {
+  state: String
+  transcoder_id: String
+  transcoder_name: String
+  starts_at: String
+  transcoding_uptime_id: String
+  file_name: String
+  file_size: Int
+  duration: Int
+  download_url: String
+  reason: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+input RecordingUpdateManyInput {
+  create: [RecordingCreateInput!]
+  connect: [RecordingWhereUniqueInput!]
+  set: [RecordingWhereUniqueInput!]
+  disconnect: [RecordingWhereUniqueInput!]
+  delete: [RecordingWhereUniqueInput!]
+  update: [RecordingUpdateWithWhereUniqueNestedInput!]
+  updateMany: [RecordingUpdateManyWithWhereNestedInput!]
+  deleteMany: [RecordingScalarWhereInput!]
+  upsert: [RecordingUpsertWithWhereUniqueNestedInput!]
+}
+
+input RecordingUpdateManyMutationInput {
+  state: String
+  transcoder_id: String
+  transcoder_name: String
+  starts_at: String
+  transcoding_uptime_id: String
+  file_name: String
+  file_size: Int
+  duration: Int
+  download_url: String
+  reason: String
+  created_at: DateTime
+  updated_at: DateTime
+}
+
+input RecordingUpdateManyWithWhereNestedInput {
+  where: RecordingScalarWhereInput!
+  data: RecordingUpdateManyDataInput!
+}
+
+input RecordingUpdateWithWhereUniqueNestedInput {
+  where: RecordingWhereUniqueInput!
+  data: RecordingUpdateDataInput!
+}
+
+input RecordingUpsertWithWhereUniqueNestedInput {
+  where: RecordingWhereUniqueInput!
+  update: RecordingUpdateDataInput!
+  create: RecordingCreateInput!
+}
+
+input RecordingWhereInput {
+  """Logical AND on all given filters."""
+  AND: [RecordingWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [RecordingWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [RecordingWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  state: String
+
+  """All values that are not equal to given value."""
+  state_not: String
+
+  """All values that are contained in given list."""
+  state_in: [String!]
+
+  """All values that are not contained in given list."""
+  state_not_in: [String!]
+
+  """All values less than the given value."""
+  state_lt: String
+
+  """All values less than or equal the given value."""
+  state_lte: String
+
+  """All values greater than the given value."""
+  state_gt: String
+
+  """All values greater than or equal the given value."""
+  state_gte: String
+
+  """All values containing the given string."""
+  state_contains: String
+
+  """All values not containing the given string."""
+  state_not_contains: String
+
+  """All values starting with the given string."""
+  state_starts_with: String
+
+  """All values not starting with the given string."""
+  state_not_starts_with: String
+
+  """All values ending with the given string."""
+  state_ends_with: String
+
+  """All values not ending with the given string."""
+  state_not_ends_with: String
+  transcoder_id: String
+
+  """All values that are not equal to given value."""
+  transcoder_id_not: String
+
+  """All values that are contained in given list."""
+  transcoder_id_in: [String!]
+
+  """All values that are not contained in given list."""
+  transcoder_id_not_in: [String!]
+
+  """All values less than the given value."""
+  transcoder_id_lt: String
+
+  """All values less than or equal the given value."""
+  transcoder_id_lte: String
+
+  """All values greater than the given value."""
+  transcoder_id_gt: String
+
+  """All values greater than or equal the given value."""
+  transcoder_id_gte: String
+
+  """All values containing the given string."""
+  transcoder_id_contains: String
+
+  """All values not containing the given string."""
+  transcoder_id_not_contains: String
+
+  """All values starting with the given string."""
+  transcoder_id_starts_with: String
+
+  """All values not starting with the given string."""
+  transcoder_id_not_starts_with: String
+
+  """All values ending with the given string."""
+  transcoder_id_ends_with: String
+
+  """All values not ending with the given string."""
+  transcoder_id_not_ends_with: String
+  transcoder_name: String
+
+  """All values that are not equal to given value."""
+  transcoder_name_not: String
+
+  """All values that are contained in given list."""
+  transcoder_name_in: [String!]
+
+  """All values that are not contained in given list."""
+  transcoder_name_not_in: [String!]
+
+  """All values less than the given value."""
+  transcoder_name_lt: String
+
+  """All values less than or equal the given value."""
+  transcoder_name_lte: String
+
+  """All values greater than the given value."""
+  transcoder_name_gt: String
+
+  """All values greater than or equal the given value."""
+  transcoder_name_gte: String
+
+  """All values containing the given string."""
+  transcoder_name_contains: String
+
+  """All values not containing the given string."""
+  transcoder_name_not_contains: String
+
+  """All values starting with the given string."""
+  transcoder_name_starts_with: String
+
+  """All values not starting with the given string."""
+  transcoder_name_not_starts_with: String
+
+  """All values ending with the given string."""
+  transcoder_name_ends_with: String
+
+  """All values not ending with the given string."""
+  transcoder_name_not_ends_with: String
+  starts_at: String
+
+  """All values that are not equal to given value."""
+  starts_at_not: String
+
+  """All values that are contained in given list."""
+  starts_at_in: [String!]
+
+  """All values that are not contained in given list."""
+  starts_at_not_in: [String!]
+
+  """All values less than the given value."""
+  starts_at_lt: String
+
+  """All values less than or equal the given value."""
+  starts_at_lte: String
+
+  """All values greater than the given value."""
+  starts_at_gt: String
+
+  """All values greater than or equal the given value."""
+  starts_at_gte: String
+
+  """All values containing the given string."""
+  starts_at_contains: String
+
+  """All values not containing the given string."""
+  starts_at_not_contains: String
+
+  """All values starting with the given string."""
+  starts_at_starts_with: String
+
+  """All values not starting with the given string."""
+  starts_at_not_starts_with: String
+
+  """All values ending with the given string."""
+  starts_at_ends_with: String
+
+  """All values not ending with the given string."""
+  starts_at_not_ends_with: String
+  transcoding_uptime_id: String
+
+  """All values that are not equal to given value."""
+  transcoding_uptime_id_not: String
+
+  """All values that are contained in given list."""
+  transcoding_uptime_id_in: [String!]
+
+  """All values that are not contained in given list."""
+  transcoding_uptime_id_not_in: [String!]
+
+  """All values less than the given value."""
+  transcoding_uptime_id_lt: String
+
+  """All values less than or equal the given value."""
+  transcoding_uptime_id_lte: String
+
+  """All values greater than the given value."""
+  transcoding_uptime_id_gt: String
+
+  """All values greater than or equal the given value."""
+  transcoding_uptime_id_gte: String
+
+  """All values containing the given string."""
+  transcoding_uptime_id_contains: String
+
+  """All values not containing the given string."""
+  transcoding_uptime_id_not_contains: String
+
+  """All values starting with the given string."""
+  transcoding_uptime_id_starts_with: String
+
+  """All values not starting with the given string."""
+  transcoding_uptime_id_not_starts_with: String
+
+  """All values ending with the given string."""
+  transcoding_uptime_id_ends_with: String
+
+  """All values not ending with the given string."""
+  transcoding_uptime_id_not_ends_with: String
+  file_name: String
+
+  """All values that are not equal to given value."""
+  file_name_not: String
+
+  """All values that are contained in given list."""
+  file_name_in: [String!]
+
+  """All values that are not contained in given list."""
+  file_name_not_in: [String!]
+
+  """All values less than the given value."""
+  file_name_lt: String
+
+  """All values less than or equal the given value."""
+  file_name_lte: String
+
+  """All values greater than the given value."""
+  file_name_gt: String
+
+  """All values greater than or equal the given value."""
+  file_name_gte: String
+
+  """All values containing the given string."""
+  file_name_contains: String
+
+  """All values not containing the given string."""
+  file_name_not_contains: String
+
+  """All values starting with the given string."""
+  file_name_starts_with: String
+
+  """All values not starting with the given string."""
+  file_name_not_starts_with: String
+
+  """All values ending with the given string."""
+  file_name_ends_with: String
+
+  """All values not ending with the given string."""
+  file_name_not_ends_with: String
+  file_size: Int
+
+  """All values that are not equal to given value."""
+  file_size_not: Int
+
+  """All values that are contained in given list."""
+  file_size_in: [Int!]
+
+  """All values that are not contained in given list."""
+  file_size_not_in: [Int!]
+
+  """All values less than the given value."""
+  file_size_lt: Int
+
+  """All values less than or equal the given value."""
+  file_size_lte: Int
+
+  """All values greater than the given value."""
+  file_size_gt: Int
+
+  """All values greater than or equal the given value."""
+  file_size_gte: Int
+  duration: Int
+
+  """All values that are not equal to given value."""
+  duration_not: Int
+
+  """All values that are contained in given list."""
+  duration_in: [Int!]
+
+  """All values that are not contained in given list."""
+  duration_not_in: [Int!]
+
+  """All values less than the given value."""
+  duration_lt: Int
+
+  """All values less than or equal the given value."""
+  duration_lte: Int
+
+  """All values greater than the given value."""
+  duration_gt: Int
+
+  """All values greater than or equal the given value."""
+  duration_gte: Int
+  download_url: String
+
+  """All values that are not equal to given value."""
+  download_url_not: String
+
+  """All values that are contained in given list."""
+  download_url_in: [String!]
+
+  """All values that are not contained in given list."""
+  download_url_not_in: [String!]
+
+  """All values less than the given value."""
+  download_url_lt: String
+
+  """All values less than or equal the given value."""
+  download_url_lte: String
+
+  """All values greater than the given value."""
+  download_url_gt: String
+
+  """All values greater than or equal the given value."""
+  download_url_gte: String
+
+  """All values containing the given string."""
+  download_url_contains: String
+
+  """All values not containing the given string."""
+  download_url_not_contains: String
+
+  """All values starting with the given string."""
+  download_url_starts_with: String
+
+  """All values not starting with the given string."""
+  download_url_not_starts_with: String
+
+  """All values ending with the given string."""
+  download_url_ends_with: String
+
+  """All values not ending with the given string."""
+  download_url_not_ends_with: String
+  reason: String
+
+  """All values that are not equal to given value."""
+  reason_not: String
+
+  """All values that are contained in given list."""
+  reason_in: [String!]
+
+  """All values that are not contained in given list."""
+  reason_not_in: [String!]
+
+  """All values less than the given value."""
+  reason_lt: String
+
+  """All values less than or equal the given value."""
+  reason_lte: String
+
+  """All values greater than the given value."""
+  reason_gt: String
+
+  """All values greater than or equal the given value."""
+  reason_gte: String
+
+  """All values containing the given string."""
+  reason_contains: String
+
+  """All values not containing the given string."""
+  reason_not_contains: String
+
+  """All values starting with the given string."""
+  reason_starts_with: String
+
+  """All values not starting with the given string."""
+  reason_not_starts_with: String
+
+  """All values ending with the given string."""
+  reason_ends_with: String
+
+  """All values not ending with the given string."""
+  reason_not_ends_with: String
+  created_at: DateTime
+
+  """All values that are not equal to given value."""
+  created_at_not: DateTime
+
+  """All values that are contained in given list."""
+  created_at_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  created_at_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  created_at_lt: DateTime
+
+  """All values less than or equal the given value."""
+  created_at_lte: DateTime
+
+  """All values greater than the given value."""
+  created_at_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  created_at_gte: DateTime
+  updated_at: DateTime
+
+  """All values that are not equal to given value."""
+  updated_at_not: DateTime
+
+  """All values that are contained in given list."""
+  updated_at_in: [DateTime!]
+
+  """All values that are not contained in given list."""
+  updated_at_not_in: [DateTime!]
+
+  """All values less than the given value."""
+  updated_at_lt: DateTime
+
+  """All values less than or equal the given value."""
+  updated_at_lte: DateTime
+
+  """All values greater than the given value."""
+  updated_at_gt: DateTime
+
+  """All values greater than or equal the given value."""
+  updated_at_gte: DateTime
+}
+
+input RecordingWhereUniqueInput {
+  id: ID
+}
+
 type Subscription {
   user(where: UserSubscriptionWhereInput): UserSubscriptionPayload
   liveStream(where: LiveStreamSubscriptionWhereInput): LiveStreamSubscriptionPayload
   liveStreamState(where: LiveStreamStateSubscriptionWhereInput): LiveStreamStateSubscriptionPayload
+  recording(where: RecordingSubscriptionWhereInput): RecordingSubscriptionPayload
   liveStreamDetails(where: LiveStreamDetailsSubscriptionWhereInput): LiveStreamDetailsSubscriptionPayload
   thumbNail(where: ThumbNailSubscriptionWhereInput): ThumbNailSubscriptionPayload
 }

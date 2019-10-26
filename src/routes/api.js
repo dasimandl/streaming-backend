@@ -3,15 +3,11 @@ const router = express.Router();
 const axios = require('axios');
 const crypto = require('crypto');
 
-const WSC_API_KEY = `${process.env.WSC_API_KEY}`;
-const WSC_ACCESS_KEY = `${process.env.WSC_ACCESS_KEY}`;
+const WSC_API_KEY = process.env.WSC_API_KEY;
+const WSC_ACCESS_KEY = process.env.WSC_ACCESS_KEY;
 const LOCAL_API_URL = process.env.REACT_APP_DEV_API_BASE_URL;
-
-// const WSC_API_KEY = `${process.env.SANDBOX_WSC_API_KEY}`;
-// const WSC_ACCESS_KEY = `${process.env.SANDBOX_WSC_ACCESS_KEY}`;
-const hostname = 'https://api.cloud.wowza.com';
-// const hostname = 'https://api-sandbox.cloud.wowza.com';
-const apiPath = '/api/v1.3';
+const WOWZA_API_BASE_PATH = process.env.WOWZA_API_BASE_PATH;
+const WOWZA_HOSTNAME = process.env.WOWZA_HOSTNAME;
 
 const buildURLConfig = path => {
   const timestamp = Math.round(new Date().getTime() / 1000);
@@ -39,12 +35,12 @@ router.get('/', (req, res, next) => {
 });
 /* GET live streams. */
 router.get('/live-streams', async (req, res, next) => {
-  const basePath = `${apiPath}/live_streams`;
+  const basePath = `${WOWZA_API_BASE_PATH}/live_streams`;
   const { headersObj: headers, path } = buildURLConfig(basePath);
   try {
     const {
       data: { live_streams: availableStreams },
-    } = await axios.get(`${hostname + path}`, headers);
+    } = await axios.get(`${WOWZA_HOSTNAME + path}`, headers);
     const allStreamDetails = await Promise.all(
       availableStreams.map(async ({ id }) => {
         try {
@@ -67,12 +63,12 @@ router.get('/live-streams', async (req, res, next) => {
 // GET single live stream details
 router.get(`/live-streams/:id`, async (req, res, next) => {
   const { id } = req.params;
-  const basePath = `${apiPath}/live_streams`;
+  const basePath = `${WOWZA_API_BASE_PATH}/live_streams`;
   const { headersObj: headers, path } = buildURLConfig(`${basePath}/${id}`);
   try {
     const {
       data: { live_stream: liveStreamDetail },
-    } = await axios.get(`${hostname + path}`, headers);
+    } = await axios.get(`${WOWZA_HOSTNAME + path}`, headers);
     res.json(liveStreamDetail);
   } catch (err) {
     console.error(err.response ? err.response.data.meta : err);
@@ -82,7 +78,7 @@ router.get(`/live-streams/:id`, async (req, res, next) => {
 // GET single live stream thumbnail image
 router.get(`/live-streams/:id/thumbnail`, async (req, res, next) => {
   const { id } = req.params;
-  const basePath = `${apiPath}/live_streams`;
+  const basePath = `${WOWZA_API_BASE_PATH}/live_streams`;
   const { headersObj: headers, path } = buildURLConfig(
     `${basePath}/${id}/thumbnail_url`
   );
@@ -90,7 +86,7 @@ router.get(`/live-streams/:id/thumbnail`, async (req, res, next) => {
   try {
     const {
       data: { live_stream: liveStreamThumbnail },
-    } = await axios.get(`${hostname + path}`, headers);
+    } = await axios.get(`${WOWZA_HOSTNAME + path}`, headers);
     res.json(liveStreamThumbnail);
   } catch (err) {
     console.error(err.response ? err.response.data.meta : err);
@@ -101,14 +97,14 @@ router.get(`/live-streams/:id/thumbnail`, async (req, res, next) => {
 // PUT start live stream
 router.put(`/live-streams/:id/start`, async (req, res, next) => {
   const { id } = req.params;
-  const basePath = `${apiPath}/live_streams`;
+  const basePath = `${WOWZA_API_BASE_PATH}/live_streams`;
   const { headersObj: headers, path } = buildURLConfig(
     `${basePath}/${id}/start`
   );
   try {
     const {
       data: { live_stream: status },
-    } = await axios.put(`${hostname + path}`, null, headers);
+    } = await axios.put(`${WOWZA_HOSTNAME + path}`, null, headers);
     res.json(status);
   } catch (err) {
     console.error(err.response ? err.response.data.meta : err);
@@ -119,14 +115,14 @@ router.put(`/live-streams/:id/start`, async (req, res, next) => {
 // PUT stop live stream
 router.put(`/live-streams/:id/stop`, async (req, res, next) => {
   const { id } = req.params;
-  const basePath = `${apiPath}/live_streams`;
+  const basePath = `${WOWZA_API_BASE_PATH}/live_streams`;
   const { headersObj: headers, path } = buildURLConfig(
     `${basePath}/${id}/stop`
   );
   try {
     const {
       data: { live_stream: status },
-    } = await axios.put(`${hostname + path}`, null, headers);
+    } = await axios.put(`${WOWZA_HOSTNAME + path}`, null, headers);
     res.json(status);
   } catch (err) {
     console.error(err.response ? err.response.data.meta : err);
@@ -137,14 +133,14 @@ router.put(`/live-streams/:id/stop`, async (req, res, next) => {
 // GET live stream state
 router.get(`/live-streams/:id/state`, async (req, res, next) => {
   const { id } = req.params;
-  const basePath = `${apiPath}/live_streams`;
+  const basePath = `${WOWZA_API_BASE_PATH}/live_streams`;
   const { headersObj: headers, path } = buildURLConfig(
     `${basePath}/${id}/state`
   );
   try {
     const {
       data: { live_stream: status },
-    } = await axios.get(`${hostname + path}`, headers);
+    } = await axios.get(`${WOWZA_HOSTNAME + path}`, headers);
     res.json(status);
   } catch (err) {
     console.error(err.response ? err.response.data.meta : err);
@@ -154,10 +150,10 @@ router.get(`/live-streams/:id/state`, async (req, res, next) => {
 
 // GET recordings
 router.get(`/recordings`, async (req, res, next) => {
-  const basePath = `${apiPath}/recordings`;
+  const basePath = `${WOWZA_API_BASE_PATH}/recordings`;
   const { headersObj: headers, path } = buildURLConfig(`${basePath}`);
   try {
-    const { data } = await axios.get(`${hostname + path}`, headers);
+    const { data } = await axios.get(`${WOWZA_HOSTNAME + path}`, headers);
     res.json(data);
   } catch (err) {
     console.error(err.response ? err.response.data.meta : err);
@@ -165,34 +161,34 @@ router.get(`/recordings`, async (req, res, next) => {
   }
 });
 
-// GET recordings
+// GET all recordings by stream ID
 router.get(`/recordings/:id`, async (req, res, next) => {
   const { id } = req.params;
-  const basePath = `${apiPath}/recordings`;
+  const basePath = `${WOWZA_API_BASE_PATH}/recordings`;
   try {
-  const {
-    data: { recordings },
-  } = await axios.get(`${LOCAL_API_URL}/recordings`);
-  const filteredRecordings = recordings.filter(
-    recording => recording.transcoder_id === id
-  );
-  // console.log(filteredRecordings, id);
-  const filteredRecordingsDetails = await Promise.all(
-    filteredRecordings.map(async ({ id }) => {
-      console.log('ID', id);
-      try {
-        const { headersObj: headers, path } = buildURLConfig(`${basePath}/${id}`);
-        const { data } = await axios.get(`${hostname + path}`, headers);
-        console.log('loop', data);
-
-        return data;
-      } catch (err) {
-        console.error(err.response ? err.response.data.meta : err);
-      }
-    })
-  );
-  console.log(filteredRecordingsDetails);
-  res.json(filteredRecordingsDetails);
+    const {
+      data: { recordings },
+    } = await axios.get(`${LOCAL_API_URL}/recordings`);
+    const filteredRecordings = recordings.filter(
+      recording => recording.transcoder_id === id
+    );
+    const filteredRecordingsDetails = await Promise.all(
+      filteredRecordings.map(async ({ id }) => {
+        console.log('ID', id);
+        try {
+          const { headersObj: headers, path } = buildURLConfig(
+            `${basePath}/${id}`
+          );
+          const {
+            data: { recording },
+          } = await axios.get(`${WOWZA_HOSTNAME + path}`, headers);
+          return recording;
+        } catch (err) {
+          console.error(err.response ? err.response.data.meta : err);
+        }
+      })
+    );
+    res.json(filteredRecordingsDetails);
   } catch (err) {
     console.error(err.response ? err.response.data.meta : err);
     next(err);

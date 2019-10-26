@@ -43,6 +43,7 @@ type LiveStream {
   state: LiveStreamState
   created_at: DateTime!  @createdAt
   updated_at: DateTime! @updatedAt
+  recordings: [Recording!]!
 }
 
 type ThumbNail {
@@ -54,4 +55,20 @@ type LiveStreamState {
   id: ID! @unique @id
   state: String!
   ip_address: String
+}
+
+type Recording {
+  id: ID! @unique @id
+  state: String!
+  transcoder_id: String!
+  transcoder_name: String!
+  starts_at: String!
+  transcoding_uptime_id: String!
+  file_name: String!
+  file_size: Int!
+  duration: Int!
+  download_url: String!
+  reason: String!
+  created_at: DateTime!
+  updated_at: DateTime!
 }
