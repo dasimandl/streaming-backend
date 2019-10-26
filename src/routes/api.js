@@ -11,7 +11,7 @@ const LOCAL_API_URL = process.env.REACT_APP_DEV_API_BASE_URL;
 // const WSC_ACCESS_KEY = `${process.env.SANDBOX_WSC_ACCESS_KEY}`;
 const hostname = 'https://api.cloud.wowza.com';
 // const hostname = 'https://api-sandbox.cloud.wowza.com';
-const basePath = '/api/v1.3/live_streams';
+const apiPath = '/api/v1.3';
 
 const buildURLConfig = path => {
   const timestamp = Math.round(new Date().getTime() / 1000);
@@ -27,9 +27,9 @@ const buildURLConfig = path => {
         'wsc-access-key': WSC_ACCESS_KEY,
         'wsc-timestamp': timestamp,
         'wsc-signature': signature,
-        'Content-Type': 'application/json'
-      }
-    }
+        'Content-Type': 'application/json',
+      },
+    },
   };
 };
 
@@ -39,10 +39,11 @@ router.get('/', (req, res, next) => {
 });
 /* GET live streams. */
 router.get('/live-streams', async (req, res, next) => {
+  const basePath = `${apiPath}/live_streams`;
   const { headersObj: headers, path } = buildURLConfig(basePath);
   try {
     const {
-      data: { live_streams: availableStreams }
+      data: { live_streams: availableStreams },
     } = await axios.get(`${hostname + path}`, headers);
     const allStreamDetails = await Promise.all(
       availableStreams.map(async ({ id }) => {
@@ -66,10 +67,11 @@ router.get('/live-streams', async (req, res, next) => {
 // GET single live stream details
 router.get(`/live-streams/:id`, async (req, res, next) => {
   const { id } = req.params;
+  const basePath = `${apiPath}/live_streams`;
   const { headersObj: headers, path } = buildURLConfig(`${basePath}/${id}`);
   try {
     const {
-      data: { live_stream: liveStreamDetail }
+      data: { live_stream: liveStreamDetail },
     } = await axios.get(`${hostname + path}`, headers);
     res.json(liveStreamDetail);
   } catch (err) {
@@ -80,11 +82,14 @@ router.get(`/live-streams/:id`, async (req, res, next) => {
 // GET single live stream thumbnail image
 router.get(`/live-streams/:id/thumbnail`, async (req, res, next) => {
   const { id } = req.params;
-  const { headersObj: headers, path } = buildURLConfig(`${basePath}/${id}/thumbnail_url`);
+  const basePath = `${apiPath}/live_streams`;
+  const { headersObj: headers, path } = buildURLConfig(
+    `${basePath}/${id}/thumbnail_url`
+  );
 
   try {
     const {
-      data: { live_stream: liveStreamThumbnail }
+      data: { live_stream: liveStreamThumbnail },
     } = await axios.get(`${hostname + path}`, headers);
     res.json(liveStreamThumbnail);
   } catch (err) {
@@ -96,10 +101,13 @@ router.get(`/live-streams/:id/thumbnail`, async (req, res, next) => {
 // PUT start live stream
 router.put(`/live-streams/:id/start`, async (req, res, next) => {
   const { id } = req.params;
-  const { headersObj: headers, path } = buildURLConfig(`${basePath}/${id}/start`);
+  const basePath = `${apiPath}/live_streams`;
+  const { headersObj: headers, path } = buildURLConfig(
+    `${basePath}/${id}/start`
+  );
   try {
     const {
-      data: { live_stream: status }
+      data: { live_stream: status },
     } = await axios.put(`${hostname + path}`, null, headers);
     res.json(status);
   } catch (err) {
@@ -111,10 +119,13 @@ router.put(`/live-streams/:id/start`, async (req, res, next) => {
 // PUT stop live stream
 router.put(`/live-streams/:id/stop`, async (req, res, next) => {
   const { id } = req.params;
-  const { headersObj: headers, path } = buildURLConfig(`${basePath}/${id}/stop`);
+  const basePath = `${apiPath}/live_streams`;
+  const { headersObj: headers, path } = buildURLConfig(
+    `${basePath}/${id}/stop`
+  );
   try {
     const {
-      data: { live_stream: status }
+      data: { live_stream: status },
     } = await axios.put(`${hostname + path}`, null, headers);
     res.json(status);
   } catch (err) {
@@ -126,12 +137,62 @@ router.put(`/live-streams/:id/stop`, async (req, res, next) => {
 // GET live stream state
 router.get(`/live-streams/:id/state`, async (req, res, next) => {
   const { id } = req.params;
-  const { headersObj: headers, path } = buildURLConfig(`${basePath}/${id}/state`);
+  const basePath = `${apiPath}/live_streams`;
+  const { headersObj: headers, path } = buildURLConfig(
+    `${basePath}/${id}/state`
+  );
   try {
     const {
-      data: { live_stream: status }
+      data: { live_stream: status },
     } = await axios.get(`${hostname + path}`, headers);
     res.json(status);
+  } catch (err) {
+    console.error(err.response ? err.response.data.meta : err);
+    next(err);
+  }
+});
+
+// GET recordings
+router.get(`/recordings`, async (req, res, next) => {
+  const basePath = `${apiPath}/recordings`;
+  const { headersObj: headers, path } = buildURLConfig(`${basePath}`);
+  try {
+    const { data } = await axios.get(`${hostname + path}`, headers);
+    res.json(data);
+  } catch (err) {
+    console.error(err.response ? err.response.data.meta : err);
+    next(err);
+  }
+});
+
+// GET recordings
+router.get(`/recordings/:id`, async (req, res, next) => {
+  const { id } = req.params;
+  const basePath = `${apiPath}/recordings`;
+  try {
+  const {
+    data: { recordings },
+  } = await axios.get(`${LOCAL_API_URL}/recordings`);
+  const filteredRecordings = recordings.filter(
+    recording => recording.transcoder_id === id
+  );
+  // console.log(filteredRecordings, id);
+  const filteredRecordingsDetails = await Promise.all(
+    filteredRecordings.map(async ({ id }) => {
+      console.log('ID', id);
+      try {
+        const { headersObj: headers, path } = buildURLConfig(`${basePath}/${id}`);
+        const { data } = await axios.get(`${hostname + path}`, headers);
+        console.log('loop', data);
+
+        return data;
+      } catch (err) {
+        console.error(err.response ? err.response.data.meta : err);
+      }
+    })
+  );
+  console.log(filteredRecordingsDetails);
+  res.json(filteredRecordingsDetails);
   } catch (err) {
     console.error(err.response ? err.response.data.meta : err);
     next(err);

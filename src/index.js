@@ -81,6 +81,7 @@ server.start(
     playground: '/playground',
   },
   info => {
+    console.log(info);
     console.log(`server is running on http://localhost:${info.port}`);
   }
 );

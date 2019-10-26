@@ -11,5 +11,5 @@ type Query {
   liveStreams: [LiveStream!]!
   liveStreamDetails(id: ID!): LiveStreamDetails!
   liveStreamState(id: ID!): LiveStreamState!
-
+  # liveStreamState(id: ID!): LiveStreamState!
 }
