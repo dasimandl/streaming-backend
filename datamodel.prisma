@@ -31,6 +31,7 @@ type LiveStreamDetails {
   hosted_page_title: String
   hosted_page_url: String
   hosted_page_description: String
+  direct_playback_urls: DirectPlaybackUrls! 
   created_at: DateTime! @createdAt
   updated_at: DateTime! @updatedAt
 }
@@ -71,4 +72,17 @@ type Recording {
   reason: String!
   created_at: DateTime!
   updated_at: DateTime!
+}
+
+type PlaybackUrl {
+  name: ID! @id
+  output_id: String
+  url: String!
+}
+
+type DirectPlaybackUrls {
+  id: ID! @id
+  rtmp: [PlaybackUrl] @relation(name: "RtmpUrls")
+  rtsp: [PlaybackUrl] @relation(name: "RtspUrls")
+  wowz: [PlaybackUrl] @relation(name: "WowzUrls")
 }

@@ -4,8 +4,8 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const { buildURLConfig } = require('../utils/resolverHelpers');
 
-const hostname = process.env.WOWZA_HOSTNAME;
-const basePath = process.env.WOWZA_LIVESTREAM_BASE_PATH;
+const WOWZA_HOSTNAME = process.env.WOWZA_HOSTNAME;
+const WOWZA_API_BASE_PATH = process.env.WOWZA_API_BASE_PATH;
 
 const Mutation = {
   async signup(parent, args, cxt, info) {
@@ -29,13 +29,14 @@ const Mutation = {
     return user;
   },
   async liveStreamStart(parent, args, cxt, info) {
-    const { headersObj: headers, path } = buildURLConfig(
-      `${basePath}/${args.id}/start`
-    );
+    const basePath = `${WOWZA_API_BASE_PATH}/live_streams/${args.id}/start`;
+    console.log(basePath);
+    const { headersObj: headers, path } = buildURLConfig(basePath);
+    console.log(`${WOWZA_HOSTNAME + path}`);
     try {
       const {
         data: { live_stream: status },
-      } = await axios.put(`${hostname + path}`, null, headers);
+      } = await axios.put(`${WOWZA_HOSTNAME + path}`, null, headers);
       status.id = args.id;
       return status;
     } catch (err) {
@@ -44,17 +45,16 @@ const Mutation = {
     }
   },
   async liveStreamStop(parent, args, cxt, info) {
-    const { headersObj: headers, path } = buildURLConfig(
-      `${basePath}/${args.id}/stop`
-      );
-      try {
-        const {
-          data: { live_stream: status },
-        } = await axios.put(`${hostname + path}`, null, headers);
-        status.id = args.id;
-        return status;
-      } catch (err) {
-        console.log('STOP ERRO');
+    const basePath = `${WOWZA_API_BASE_PATH}/live_streams/${args.id}/stop`;
+    const { headersObj: headers, path } = buildURLConfig(basePath);
+    try {
+      const {
+        data: { live_stream: status },
+      } = await axios.put(`${WOWZA_HOSTNAME + path}`, null, headers);
+      status.id = args.id;
+      return status;
+    } catch (err) {
+      console.log('STOP ERRO');
       return console.error(err.response ? err.response.data.meta : err);
     }
   },

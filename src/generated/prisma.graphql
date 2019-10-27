@@ -1,5 +1,9 @@
 # source: https://us1.prisma.sh/daniel-simandl/streaming-backend/dev
-# timestamp: Sat Oct 26 2019 17:12:00 GMT-0500 (Central Daylight Time)
+# timestamp: Sun Oct 27 2019 13:32:19 GMT-0500 (Central Daylight Time)
+
+type AggregateDirectPlaybackUrls {
+  count: Int!
+}
 
 type AggregateLiveStream {
   count: Int!
@@ -10,6 +14,10 @@ type AggregateLiveStreamDetails {
 }
 
 type AggregateLiveStreamState {
+  count: Int!
+}
+
+type AggregatePlaybackUrl {
   count: Int!
 }
 
@@ -31,6 +39,178 @@ type BatchPayload {
 }
 
 scalar DateTime
+
+type DirectPlaybackUrls implements Node {
+  id: ID!
+  rtmp(where: PlaybackUrlWhereInput, orderBy: PlaybackUrlOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PlaybackUrl!]
+  rtsp(where: PlaybackUrlWhereInput, orderBy: PlaybackUrlOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PlaybackUrl!]
+  wowz(where: PlaybackUrlWhereInput, orderBy: PlaybackUrlOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PlaybackUrl!]
+}
+
+"""A connection to a list of items."""
+type DirectPlaybackUrlsConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [DirectPlaybackUrlsEdge]!
+  aggregate: AggregateDirectPlaybackUrls!
+}
+
+input DirectPlaybackUrlsCreateInput {
+  id: ID
+  rtmp: PlaybackUrlCreateManyInput
+  rtsp: PlaybackUrlCreateManyInput
+  wowz: PlaybackUrlCreateManyInput
+}
+
+input DirectPlaybackUrlsCreateOneInput {
+  create: DirectPlaybackUrlsCreateInput
+  connect: DirectPlaybackUrlsWhereUniqueInput
+}
+
+"""An edge in a connection."""
+type DirectPlaybackUrlsEdge {
+  """The item at the end of the edge."""
+  node: DirectPlaybackUrls!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum DirectPlaybackUrlsOrderByInput {
+  id_ASC
+  id_DESC
+}
+
+type DirectPlaybackUrlsPreviousValues {
+  id: ID!
+}
+
+type DirectPlaybackUrlsSubscriptionPayload {
+  mutation: MutationType!
+  node: DirectPlaybackUrls
+  updatedFields: [String!]
+  previousValues: DirectPlaybackUrlsPreviousValues
+}
+
+input DirectPlaybackUrlsSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DirectPlaybackUrlsSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DirectPlaybackUrlsSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DirectPlaybackUrlsSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: DirectPlaybackUrlsWhereInput
+}
+
+input DirectPlaybackUrlsUpdateDataInput {
+  rtmp: PlaybackUrlUpdateManyInput
+  rtsp: PlaybackUrlUpdateManyInput
+  wowz: PlaybackUrlUpdateManyInput
+}
+
+input DirectPlaybackUrlsUpdateInput {
+  rtmp: PlaybackUrlUpdateManyInput
+  rtsp: PlaybackUrlUpdateManyInput
+  wowz: PlaybackUrlUpdateManyInput
+}
+
+input DirectPlaybackUrlsUpdateOneRequiredInput {
+  create: DirectPlaybackUrlsCreateInput
+  connect: DirectPlaybackUrlsWhereUniqueInput
+  update: DirectPlaybackUrlsUpdateDataInput
+  upsert: DirectPlaybackUrlsUpsertNestedInput
+}
+
+input DirectPlaybackUrlsUpsertNestedInput {
+  update: DirectPlaybackUrlsUpdateDataInput!
+  create: DirectPlaybackUrlsCreateInput!
+}
+
+input DirectPlaybackUrlsWhereInput {
+  """Logical AND on all given filters."""
+  AND: [DirectPlaybackUrlsWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [DirectPlaybackUrlsWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [DirectPlaybackUrlsWhereInput!]
+  id: ID
+
+  """All values that are not equal to given value."""
+  id_not: ID
+
+  """All values that are contained in given list."""
+  id_in: [ID!]
+
+  """All values that are not contained in given list."""
+  id_not_in: [ID!]
+
+  """All values less than the given value."""
+  id_lt: ID
+
+  """All values less than or equal the given value."""
+  id_lte: ID
+
+  """All values greater than the given value."""
+  id_gt: ID
+
+  """All values greater than or equal the given value."""
+  id_gte: ID
+
+  """All values containing the given string."""
+  id_contains: ID
+
+  """All values not containing the given string."""
+  id_not_contains: ID
+
+  """All values starting with the given string."""
+  id_starts_with: ID
+
+  """All values not starting with the given string."""
+  id_not_starts_with: ID
+
+  """All values ending with the given string."""
+  id_ends_with: ID
+
+  """All values not ending with the given string."""
+  id_not_ends_with: ID
+  rtmp_every: PlaybackUrlWhereInput
+  rtmp_some: PlaybackUrlWhereInput
+  rtmp_none: PlaybackUrlWhereInput
+  rtsp_every: PlaybackUrlWhereInput
+  rtsp_some: PlaybackUrlWhereInput
+  rtsp_none: PlaybackUrlWhereInput
+  wowz_every: PlaybackUrlWhereInput
+  wowz_some: PlaybackUrlWhereInput
+  wowz_none: PlaybackUrlWhereInput
+}
+
+input DirectPlaybackUrlsWhereUniqueInput {
+  id: ID
+}
 
 type LiveStream implements Node {
   id: ID!
@@ -76,6 +256,7 @@ type LiveStreamDetails implements Node {
   hosted_page_title: String
   hosted_page_url: String
   hosted_page_description: String
+  direct_playback_urls: DirectPlaybackUrls!
   created_at: DateTime!
   updated_at: DateTime!
 }
@@ -104,6 +285,7 @@ input LiveStreamDetailsCreateInput {
   hosted_page_title: String
   hosted_page_url: String
   hosted_page_description: String
+  direct_playback_urls: DirectPlaybackUrlsCreateOneInput!
 }
 
 input LiveStreamDetailsCreateOneInput {
@@ -221,6 +403,7 @@ input LiveStreamDetailsUpdateDataInput {
   hosted_page_title: String
   hosted_page_url: String
   hosted_page_description: String
+  direct_playback_urls: DirectPlaybackUrlsUpdateOneRequiredInput
 }
 
 input LiveStreamDetailsUpdateInput {
@@ -236,6 +419,7 @@ input LiveStreamDetailsUpdateInput {
   hosted_page_title: String
   hosted_page_url: String
   hosted_page_description: String
+  direct_playback_urls: DirectPlaybackUrlsUpdateOneRequiredInput
 }
 
 input LiveStreamDetailsUpdateManyMutationInput {
@@ -804,6 +988,7 @@ input LiveStreamDetailsWhereInput {
 
   """All values greater than or equal the given value."""
   updated_at_gte: DateTime
+  direct_playback_urls: DirectPlaybackUrlsWhereInput
 }
 
 input LiveStreamDetailsWhereUniqueInput {
@@ -1294,38 +1479,49 @@ type Mutation {
   createLiveStream(data: LiveStreamCreateInput!): LiveStream!
   createLiveStreamState(data: LiveStreamStateCreateInput!): LiveStreamState!
   createRecording(data: RecordingCreateInput!): Recording!
-  createLiveStreamDetails(data: LiveStreamDetailsCreateInput!): LiveStreamDetails!
+  createPlaybackUrl(data: PlaybackUrlCreateInput!): PlaybackUrl!
   createThumbNail(data: ThumbNailCreateInput!): ThumbNail!
+  createDirectPlaybackUrls(data: DirectPlaybackUrlsCreateInput!): DirectPlaybackUrls!
+  createLiveStreamDetails(data: LiveStreamDetailsCreateInput!): LiveStreamDetails!
   updateUser(data: UserUpdateInput!, where: UserWhereUniqueInput!): User
   updateLiveStream(data: LiveStreamUpdateInput!, where: LiveStreamWhereUniqueInput!): LiveStream
   updateLiveStreamState(data: LiveStreamStateUpdateInput!, where: LiveStreamStateWhereUniqueInput!): LiveStreamState
   updateRecording(data: RecordingUpdateInput!, where: RecordingWhereUniqueInput!): Recording
-  updateLiveStreamDetails(data: LiveStreamDetailsUpdateInput!, where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
+  updatePlaybackUrl(data: PlaybackUrlUpdateInput!, where: PlaybackUrlWhereUniqueInput!): PlaybackUrl
   updateThumbNail(data: ThumbNailUpdateInput!, where: ThumbNailWhereUniqueInput!): ThumbNail
+  updateDirectPlaybackUrls(data: DirectPlaybackUrlsUpdateInput!, where: DirectPlaybackUrlsWhereUniqueInput!): DirectPlaybackUrls
+  updateLiveStreamDetails(data: LiveStreamDetailsUpdateInput!, where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   deleteUser(where: UserWhereUniqueInput!): User
   deleteLiveStream(where: LiveStreamWhereUniqueInput!): LiveStream
   deleteLiveStreamState(where: LiveStreamStateWhereUniqueInput!): LiveStreamState
   deleteRecording(where: RecordingWhereUniqueInput!): Recording
-  deleteLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
+  deletePlaybackUrl(where: PlaybackUrlWhereUniqueInput!): PlaybackUrl
   deleteThumbNail(where: ThumbNailWhereUniqueInput!): ThumbNail
+  deleteDirectPlaybackUrls(where: DirectPlaybackUrlsWhereUniqueInput!): DirectPlaybackUrls
+  deleteLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   upsertUser(where: UserWhereUniqueInput!, create: UserCreateInput!, update: UserUpdateInput!): User!
   upsertLiveStream(where: LiveStreamWhereUniqueInput!, create: LiveStreamCreateInput!, update: LiveStreamUpdateInput!): LiveStream!
   upsertLiveStreamState(where: LiveStreamStateWhereUniqueInput!, create: LiveStreamStateCreateInput!, update: LiveStreamStateUpdateInput!): LiveStreamState!
   upsertRecording(where: RecordingWhereUniqueInput!, create: RecordingCreateInput!, update: RecordingUpdateInput!): Recording!
-  upsertLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!, create: LiveStreamDetailsCreateInput!, update: LiveStreamDetailsUpdateInput!): LiveStreamDetails!
+  upsertPlaybackUrl(where: PlaybackUrlWhereUniqueInput!, create: PlaybackUrlCreateInput!, update: PlaybackUrlUpdateInput!): PlaybackUrl!
   upsertThumbNail(where: ThumbNailWhereUniqueInput!, create: ThumbNailCreateInput!, update: ThumbNailUpdateInput!): ThumbNail!
+  upsertDirectPlaybackUrls(where: DirectPlaybackUrlsWhereUniqueInput!, create: DirectPlaybackUrlsCreateInput!, update: DirectPlaybackUrlsUpdateInput!): DirectPlaybackUrls!
+  upsertLiveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!, create: LiveStreamDetailsCreateInput!, update: LiveStreamDetailsUpdateInput!): LiveStreamDetails!
   updateManyUsers(data: UserUpdateManyMutationInput!, where: UserWhereInput): BatchPayload!
   updateManyLiveStreams(data: LiveStreamUpdateManyMutationInput!, where: LiveStreamWhereInput): BatchPayload!
   updateManyLiveStreamStates(data: LiveStreamStateUpdateManyMutationInput!, where: LiveStreamStateWhereInput): BatchPayload!
   updateManyRecordings(data: RecordingUpdateManyMutationInput!, where: RecordingWhereInput): BatchPayload!
-  updateManyLiveStreamDetailses(data: LiveStreamDetailsUpdateManyMutationInput!, where: LiveStreamDetailsWhereInput): BatchPayload!
+  updateManyPlaybackUrls(data: PlaybackUrlUpdateManyMutationInput!, where: PlaybackUrlWhereInput): BatchPayload!
   updateManyThumbNails(data: ThumbNailUpdateManyMutationInput!, where: ThumbNailWhereInput): BatchPayload!
+  updateManyLiveStreamDetailses(data: LiveStreamDetailsUpdateManyMutationInput!, where: LiveStreamDetailsWhereInput): BatchPayload!
   deleteManyUsers(where: UserWhereInput): BatchPayload!
   deleteManyLiveStreams(where: LiveStreamWhereInput): BatchPayload!
   deleteManyLiveStreamStates(where: LiveStreamStateWhereInput): BatchPayload!
   deleteManyRecordings(where: RecordingWhereInput): BatchPayload!
-  deleteManyLiveStreamDetailses(where: LiveStreamDetailsWhereInput): BatchPayload!
+  deleteManyPlaybackUrls(where: PlaybackUrlWhereInput): BatchPayload!
   deleteManyThumbNails(where: ThumbNailWhereInput): BatchPayload!
+  deleteManyDirectPlaybackUrlses(where: DirectPlaybackUrlsWhereInput): BatchPayload!
+  deleteManyLiveStreamDetailses(where: LiveStreamDetailsWhereInput): BatchPayload!
 }
 
 enum MutationType {
@@ -1364,25 +1560,433 @@ enum Permission {
   PERMISSIONUPDATE
 }
 
+type PlaybackUrl {
+  name: ID!
+  output_id: String
+  url: String!
+}
+
+"""A connection to a list of items."""
+type PlaybackUrlConnection {
+  """Information to aid in pagination."""
+  pageInfo: PageInfo!
+
+  """A list of edges."""
+  edges: [PlaybackUrlEdge]!
+  aggregate: AggregatePlaybackUrl!
+}
+
+input PlaybackUrlCreateInput {
+  name: ID
+  output_id: String
+  url: String!
+}
+
+input PlaybackUrlCreateManyInput {
+  create: [PlaybackUrlCreateInput!]
+  connect: [PlaybackUrlWhereUniqueInput!]
+}
+
+"""An edge in a connection."""
+type PlaybackUrlEdge {
+  """The item at the end of the edge."""
+  node: PlaybackUrl!
+
+  """A cursor for use in pagination."""
+  cursor: String!
+}
+
+enum PlaybackUrlOrderByInput {
+  name_ASC
+  name_DESC
+  output_id_ASC
+  output_id_DESC
+  url_ASC
+  url_DESC
+}
+
+type PlaybackUrlPreviousValues {
+  name: ID!
+  output_id: String
+  url: String!
+}
+
+input PlaybackUrlScalarWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PlaybackUrlScalarWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PlaybackUrlScalarWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PlaybackUrlScalarWhereInput!]
+  name: ID
+
+  """All values that are not equal to given value."""
+  name_not: ID
+
+  """All values that are contained in given list."""
+  name_in: [ID!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [ID!]
+
+  """All values less than the given value."""
+  name_lt: ID
+
+  """All values less than or equal the given value."""
+  name_lte: ID
+
+  """All values greater than the given value."""
+  name_gt: ID
+
+  """All values greater than or equal the given value."""
+  name_gte: ID
+
+  """All values containing the given string."""
+  name_contains: ID
+
+  """All values not containing the given string."""
+  name_not_contains: ID
+
+  """All values starting with the given string."""
+  name_starts_with: ID
+
+  """All values not starting with the given string."""
+  name_not_starts_with: ID
+
+  """All values ending with the given string."""
+  name_ends_with: ID
+
+  """All values not ending with the given string."""
+  name_not_ends_with: ID
+  output_id: String
+
+  """All values that are not equal to given value."""
+  output_id_not: String
+
+  """All values that are contained in given list."""
+  output_id_in: [String!]
+
+  """All values that are not contained in given list."""
+  output_id_not_in: [String!]
+
+  """All values less than the given value."""
+  output_id_lt: String
+
+  """All values less than or equal the given value."""
+  output_id_lte: String
+
+  """All values greater than the given value."""
+  output_id_gt: String
+
+  """All values greater than or equal the given value."""
+  output_id_gte: String
+
+  """All values containing the given string."""
+  output_id_contains: String
+
+  """All values not containing the given string."""
+  output_id_not_contains: String
+
+  """All values starting with the given string."""
+  output_id_starts_with: String
+
+  """All values not starting with the given string."""
+  output_id_not_starts_with: String
+
+  """All values ending with the given string."""
+  output_id_ends_with: String
+
+  """All values not ending with the given string."""
+  output_id_not_ends_with: String
+  url: String
+
+  """All values that are not equal to given value."""
+  url_not: String
+
+  """All values that are contained in given list."""
+  url_in: [String!]
+
+  """All values that are not contained in given list."""
+  url_not_in: [String!]
+
+  """All values less than the given value."""
+  url_lt: String
+
+  """All values less than or equal the given value."""
+  url_lte: String
+
+  """All values greater than the given value."""
+  url_gt: String
+
+  """All values greater than or equal the given value."""
+  url_gte: String
+
+  """All values containing the given string."""
+  url_contains: String
+
+  """All values not containing the given string."""
+  url_not_contains: String
+
+  """All values starting with the given string."""
+  url_starts_with: String
+
+  """All values not starting with the given string."""
+  url_not_starts_with: String
+
+  """All values ending with the given string."""
+  url_ends_with: String
+
+  """All values not ending with the given string."""
+  url_not_ends_with: String
+}
+
+type PlaybackUrlSubscriptionPayload {
+  mutation: MutationType!
+  node: PlaybackUrl
+  updatedFields: [String!]
+  previousValues: PlaybackUrlPreviousValues
+}
+
+input PlaybackUrlSubscriptionWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PlaybackUrlSubscriptionWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PlaybackUrlSubscriptionWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PlaybackUrlSubscriptionWhereInput!]
+
+  """The subscription event gets dispatched when it's listed in mutation_in"""
+  mutation_in: [MutationType!]
+
+  """
+  The subscription event gets only dispatched when one of the updated fields names is included in this list
+  """
+  updatedFields_contains: String
+
+  """
+  The subscription event gets only dispatched when all of the field names included in this list have been updated
+  """
+  updatedFields_contains_every: [String!]
+
+  """
+  The subscription event gets only dispatched when some of the field names included in this list have been updated
+  """
+  updatedFields_contains_some: [String!]
+  node: PlaybackUrlWhereInput
+}
+
+input PlaybackUrlUpdateDataInput {
+  output_id: String
+  url: String
+}
+
+input PlaybackUrlUpdateInput {
+  output_id: String
+  url: String
+}
+
+input PlaybackUrlUpdateManyDataInput {
+  output_id: String
+  url: String
+}
+
+input PlaybackUrlUpdateManyInput {
+  create: [PlaybackUrlCreateInput!]
+  connect: [PlaybackUrlWhereUniqueInput!]
+  set: [PlaybackUrlWhereUniqueInput!]
+  disconnect: [PlaybackUrlWhereUniqueInput!]
+  delete: [PlaybackUrlWhereUniqueInput!]
+  update: [PlaybackUrlUpdateWithWhereUniqueNestedInput!]
+  updateMany: [PlaybackUrlUpdateManyWithWhereNestedInput!]
+  deleteMany: [PlaybackUrlScalarWhereInput!]
+  upsert: [PlaybackUrlUpsertWithWhereUniqueNestedInput!]
+}
+
+input PlaybackUrlUpdateManyMutationInput {
+  output_id: String
+  url: String
+}
+
+input PlaybackUrlUpdateManyWithWhereNestedInput {
+  where: PlaybackUrlScalarWhereInput!
+  data: PlaybackUrlUpdateManyDataInput!
+}
+
+input PlaybackUrlUpdateWithWhereUniqueNestedInput {
+  where: PlaybackUrlWhereUniqueInput!
+  data: PlaybackUrlUpdateDataInput!
+}
+
+input PlaybackUrlUpsertWithWhereUniqueNestedInput {
+  where: PlaybackUrlWhereUniqueInput!
+  update: PlaybackUrlUpdateDataInput!
+  create: PlaybackUrlCreateInput!
+}
+
+input PlaybackUrlWhereInput {
+  """Logical AND on all given filters."""
+  AND: [PlaybackUrlWhereInput!]
+
+  """Logical OR on all given filters."""
+  OR: [PlaybackUrlWhereInput!]
+
+  """Logical NOT on all given filters combined by AND."""
+  NOT: [PlaybackUrlWhereInput!]
+  name: ID
+
+  """All values that are not equal to given value."""
+  name_not: ID
+
+  """All values that are contained in given list."""
+  name_in: [ID!]
+
+  """All values that are not contained in given list."""
+  name_not_in: [ID!]
+
+  """All values less than the given value."""
+  name_lt: ID
+
+  """All values less than or equal the given value."""
+  name_lte: ID
+
+  """All values greater than the given value."""
+  name_gt: ID
+
+  """All values greater than or equal the given value."""
+  name_gte: ID
+
+  """All values containing the given string."""
+  name_contains: ID
+
+  """All values not containing the given string."""
+  name_not_contains: ID
+
+  """All values starting with the given string."""
+  name_starts_with: ID
+
+  """All values not starting with the given string."""
+  name_not_starts_with: ID
+
+  """All values ending with the given string."""
+  name_ends_with: ID
+
+  """All values not ending with the given string."""
+  name_not_ends_with: ID
+  output_id: String
+
+  """All values that are not equal to given value."""
+  output_id_not: String
+
+  """All values that are contained in given list."""
+  output_id_in: [String!]
+
+  """All values that are not contained in given list."""
+  output_id_not_in: [String!]
+
+  """All values less than the given value."""
+  output_id_lt: String
+
+  """All values less than or equal the given value."""
+  output_id_lte: String
+
+  """All values greater than the given value."""
+  output_id_gt: String
+
+  """All values greater than or equal the given value."""
+  output_id_gte: String
+
+  """All values containing the given string."""
+  output_id_contains: String
+
+  """All values not containing the given string."""
+  output_id_not_contains: String
+
+  """All values starting with the given string."""
+  output_id_starts_with: String
+
+  """All values not starting with the given string."""
+  output_id_not_starts_with: String
+
+  """All values ending with the given string."""
+  output_id_ends_with: String
+
+  """All values not ending with the given string."""
+  output_id_not_ends_with: String
+  url: String
+
+  """All values that are not equal to given value."""
+  url_not: String
+
+  """All values that are contained in given list."""
+  url_in: [String!]
+
+  """All values that are not contained in given list."""
+  url_not_in: [String!]
+
+  """All values less than the given value."""
+  url_lt: String
+
+  """All values less than or equal the given value."""
+  url_lte: String
+
+  """All values greater than the given value."""
+  url_gt: String
+
+  """All values greater than or equal the given value."""
+  url_gte: String
+
+  """All values containing the given string."""
+  url_contains: String
+
+  """All values not containing the given string."""
+  url_not_contains: String
+
+  """All values starting with the given string."""
+  url_starts_with: String
+
+  """All values not starting with the given string."""
+  url_not_starts_with: String
+
+  """All values ending with the given string."""
+  url_ends_with: String
+
+  """All values not ending with the given string."""
+  url_not_ends_with: String
+}
+
+input PlaybackUrlWhereUniqueInput {
+  name: ID
+}
+
 type Query {
   users(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [User]!
   liveStreams(where: LiveStreamWhereInput, orderBy: LiveStreamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStream]!
   liveStreamStates(where: LiveStreamStateWhereInput, orderBy: LiveStreamStateOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreamState]!
   recordings(where: RecordingWhereInput, orderBy: RecordingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [Recording]!
-  liveStreamDetailses(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreamDetails]!
+  playbackUrls(where: PlaybackUrlWhereInput, orderBy: PlaybackUrlOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [PlaybackUrl]!
   thumbNails(where: ThumbNailWhereInput, orderBy: ThumbNailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [ThumbNail]!
+  directPlaybackUrlses(where: DirectPlaybackUrlsWhereInput, orderBy: DirectPlaybackUrlsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [DirectPlaybackUrls]!
+  liveStreamDetailses(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): [LiveStreamDetails]!
   user(where: UserWhereUniqueInput!): User
   liveStream(where: LiveStreamWhereUniqueInput!): LiveStream
   liveStreamState(where: LiveStreamStateWhereUniqueInput!): LiveStreamState
   recording(where: RecordingWhereUniqueInput!): Recording
-  liveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
+  playbackUrl(where: PlaybackUrlWhereUniqueInput!): PlaybackUrl
   thumbNail(where: ThumbNailWhereUniqueInput!): ThumbNail
+  directPlaybackUrls(where: DirectPlaybackUrlsWhereUniqueInput!): DirectPlaybackUrls
+  liveStreamDetails(where: LiveStreamDetailsWhereUniqueInput!): LiveStreamDetails
   usersConnection(where: UserWhereInput, orderBy: UserOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): UserConnection!
   liveStreamsConnection(where: LiveStreamWhereInput, orderBy: LiveStreamOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamConnection!
   liveStreamStatesConnection(where: LiveStreamStateWhereInput, orderBy: LiveStreamStateOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamStateConnection!
   recordingsConnection(where: RecordingWhereInput, orderBy: RecordingOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): RecordingConnection!
-  liveStreamDetailsesConnection(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamDetailsConnection!
+  playbackUrlsConnection(where: PlaybackUrlWhereInput, orderBy: PlaybackUrlOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): PlaybackUrlConnection!
   thumbNailsConnection(where: ThumbNailWhereInput, orderBy: ThumbNailOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): ThumbNailConnection!
+  directPlaybackUrlsesConnection(where: DirectPlaybackUrlsWhereInput, orderBy: DirectPlaybackUrlsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): DirectPlaybackUrlsConnection!
+  liveStreamDetailsesConnection(where: LiveStreamDetailsWhereInput, orderBy: LiveStreamDetailsOrderByInput, skip: Int, after: String, before: String, first: Int, last: Int): LiveStreamDetailsConnection!
 
   """Fetches an object given its ID"""
   node(
@@ -2544,8 +3148,10 @@ type Subscription {
   liveStream(where: LiveStreamSubscriptionWhereInput): LiveStreamSubscriptionPayload
   liveStreamState(where: LiveStreamStateSubscriptionWhereInput): LiveStreamStateSubscriptionPayload
   recording(where: RecordingSubscriptionWhereInput): RecordingSubscriptionPayload
-  liveStreamDetails(where: LiveStreamDetailsSubscriptionWhereInput): LiveStreamDetailsSubscriptionPayload
+  playbackUrl(where: PlaybackUrlSubscriptionWhereInput): PlaybackUrlSubscriptionPayload
   thumbNail(where: ThumbNailSubscriptionWhereInput): ThumbNailSubscriptionPayload
+  directPlaybackUrls(where: DirectPlaybackUrlsSubscriptionWhereInput): DirectPlaybackUrlsSubscriptionPayload
+  liveStreamDetails(where: LiveStreamDetailsSubscriptionWhereInput): LiveStreamDetailsSubscriptionPayload
 }
 
 type ThumbNail implements Node {
